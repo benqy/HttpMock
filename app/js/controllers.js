@@ -1,24 +1,44 @@
-'use strict';
+﻿'use strict';
 
 /* Controllers */
 
 angular.module('httpmock.controllers', [])
-  .controller('Mocks', function ($scope) {
+  .controller('Mocks', function ($scope, $routeParams) {
     var nm = require('./netmock'),
-      mocks = nm.mocks.getMocks();
+      mocks = nm.mocks.getMocks(),
+      mockName = $routeParams.name || app.current.mockName || Object.keys(mocks)[0],
+      currentMock = mocks[mockName];
+    currentMock.cls = 'active';
+    app.current.controller = 'Mocks';
+    app.current.mockName = currentMock.name;
+    //列表
     $scope.mocks = mocks;
   })
-  .controller('MockDetail', function ($scope, $routeParams) {
+  .controller('CurrentMock', function ($scope, $routeParams) {
     var nm = require('./netmock'),
-       mocks = nm.mocks.getMocks(),
-       mock = mocks[$routeParams.name],
-       routes = nm.mocks.getRoutes(mock.name);
-    $scope.mock = mock;
+      mocks = nm.mocks.getMocks(),
+      mockName = $routeParams.name || app.current.mockName || Object.keys(mocks)[0],
+      currentMock = mocks[mockName],
+      routes = nm.mocks.getRoutes(currentMock.name);
+    console.log($routeParams)
+    //当前mock
+    $scope.currentMock = currentMock;
+    //当前mock的所有routes
     $scope.routes = routes;
-    $scope.startMock = function (mock) {
-      console.log(mock);
+    app.current.controller = 'Mocks';
+    app.current.mockName = currentMock.name;
+
+    //显示鼠标鼠标指向的route的自定义header
+    $scope.showCustomHeaders = function (e) {
+      $(e.target).next('div').show();
+    };
+    $scope.hideCustomHeaders = function (e) {
+      $(e.target).next('div').hide();
     };
   })
-  .controller('System', function () {
-    console.log(2)
+  .controller('MockUpdate',function($scope){
+
+  })
+  .controller('System', function ($scope) {
+    $scope.a = 1;
   });

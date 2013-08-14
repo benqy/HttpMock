@@ -1,11 +1,11 @@
-'use strict';
+ï»¿'use strict';
 
 /* Filters */
 
 angular.module('httpmock.filters', [])
  .filter('mockType', function () {
    return function (input) {
-     return input == 1 ? 'Host' : '´úÀí';
+     return input == 1 ? 'Host' : 'ä»£ç†';
    };
  })
   //.filter('headerStr', function () {

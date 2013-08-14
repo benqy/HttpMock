@@ -1,4 +1,10 @@
-﻿<form class="form-horizontal">
+﻿<div class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Modal header</h3>
+  </div>
+  <div class="modal-body">
+    <form class="form-horizontal">
     <div class="control-group">
         <label class="control-label">域名</label>
         <div class="controls">
@@ -24,7 +30,6 @@
                 <option value="1">修改本地HOST</option>
                 <option value="2">客户端代理</option>
             </select>
-            稳定性更好,但是不能查看和重定向现有的外网地址
         </div>
     </div>
     <div class="control-group">
@@ -33,3 +38,10 @@
         </div>
     </div>
 </form>
+
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn">Close</a>
+    <a href="#" class="btn btn-primary">Save changes</a>
+  </div>
+</div>
