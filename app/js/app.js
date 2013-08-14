@@ -31,7 +31,7 @@ angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controller
       controller: 'Mocks'
     })
     .state('mocks.currentmock', {
-      url: "/currentmock/:name",
+      url: "/{name}",
       templateUrl: "partials/mock/detail.html",
       controller: 'CurrentMock'
     })
