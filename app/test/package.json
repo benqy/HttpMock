@@ -1,0 +1,15 @@
+﻿{
+  "name": "HTTPMOCK",
+  "main": "e2e/runner.html",
+  "window": {
+    "title": "HttpMock",
+    "icon": "logo.png",
+    "toolbar": true,
+    "frame": true,
+    "width": 1200,
+    "height": 700,
+    "position": "center",
+    "min_width": 1200,
+    "min_height": 700
+  }
+}

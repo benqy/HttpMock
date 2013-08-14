@@ -1,0 +1,41 @@
+﻿<div>
+    <form class="form-horizontal" id="systemSettingForm">
+        <div class="control-group">
+            <label class="control-label">代理端口</label>
+            <div class="controls">
+                <input type="text" name="proxyPort" disabled="disabled" value="17173">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">存档文件夹</label>
+            <div class="controls">
+                <input type="text" class="large" name="storeDir" style="width: 390px;">
+            </div>
+        </div>
+        <!--<div class="control-group">
+            <label class="control-label">缓存设置</label>
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" name="noCache">
+                    禁用浏览器缓存
+                </label>
+            </div>
+        </div>-->
+        <div class="control-group">
+            <label class="control-label">全局Response Header</label>
+            <div class="controls" id="addGlobalHeaderContainer">
+                <p class="globarHeader firstGlobalHeader">
+                    <input class="span2 headerName" type="text">
+                    :
+                        <input class="span3 headerValue" type="text">
+                    <a href="javascript://" class="btn btn-success btn-mini btn-add-header" id="addGlobalHeader"><i class="icon icon-plus icon-white"></i></a>
+                </p>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn">保存</button>
+            </div>
+        </div>
+    </form>
+</div>

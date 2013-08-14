@@ -1,0 +1,81 @@
+﻿<div>
+    <h3>Mock信息</h3>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>域名</th>
+                <th>端口</th>
+                <th>描述</th>
+                <th>类型</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{mock.name}}</td>
+                <td>{{mock.port}}</td>
+                <td>{{mock.desc}}</td>
+                <td>{{mock.mockType | mockType}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        <button class="btn" type="button" ng-click="startMock(mock)">启动</button>
+        <a href="javascript://" class="btn">编辑</a>
+        <button class="btn " type="button">删除</button>
+        <a href="javascript://" data-target="#updateRouteModal" role="button" class="btn" data-toggle="modal">添加路由</a>
+    </p>
+    <h3>路由列表</h3>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>
+                    <div style="min-width: 62px">路径</div>
+                </th>
+                <th>
+                    <div style="min-width: 62px">状态</div>
+                </th>
+                <th>
+                    <div style="min-width: 62px">延迟(ms)</div>
+                </th>
+                <th>
+                    <div style="min-width: 65px">原始请求</div>
+                </th>
+                <th>
+                    <div style="min-width: 120px">自定义Header</div>
+                </th>
+                <th>
+                    <div style="min-width: 120px">Content Type</div>
+                </th>
+                <th>
+                    <div style="min-width: 60px">Response</div>
+                </th>
+                <th>
+                    <div style="min-width: 95px">操作</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="route in routes">
+                <td></td>
+                <td>{{route.path}}</td>
+                <td>{{route.statusCode}}</td>
+                <td>{{route.delay}}</td>
+                <td>{{route.noProxy}}</td>
+                <td>
+                    <div ng-repeat="header in route.customHeaders">
+                        <p>{{header.name}}：{{header.value}}</p>
+                    </div>
+                </td>
+                <td>{{route.contentType}}</td>
+                <td>{{route.responseData}}</td>
+                <td>
+                    <a href="javascript://" class="btn btn-success btn-mini"><i class="icon icon-share icon-white"></i></a>
+                    <a href="javascript://" class="btn btn-success btn-mini marginLeft3"><i class="icon icon-edit icon-white"></i></a>
+                    <a href="javascript://" class="btn btn-success btn-mini marginLeft3"><i class="icon icon-trash icon-white"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+

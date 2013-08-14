@@ -1,0 +1,29 @@
+﻿<div id="logWrap">
+    <div class="input-append">
+        <input class="span2" id="logFilterTxt" type="text">
+        <button class="btn" type="button" id="logFilterBtn">筛选</button>
+        <button class="btn" type="button" id="clearLog">清空列表</button>
+        <button class="btn " type="button" disabled="disabled">导出</button>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>时间</th>
+                <th>地址</th>
+                <th>Method</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>header</th>
+                <th>内容</th>
+                <th>Size(kb)</th>
+                <th>耗时(ms)</th>
+            </tr>
+        </thead>
+        <tbody id="loglist">
+        </tbody>
+    </table>
+    <pre id="logContentWrap">
+        <button type="button" id="logContentClose" class="close">×</button>
+        <code id="logContent" class="javascript"></code>
+    </pre>
+</div>
