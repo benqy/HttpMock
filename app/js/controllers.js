@@ -3,35 +3,15 @@
 angular.module('httpmock.controllers', [])
   //mock列表
   .controller('Mocks', function ($scope) {
-    var nm = require('./netmock'),
-      mocks = nm.mocks.getMocks();
-    app.store.mocks = mocks;
-    //列表
-    $scope.mocks = mocks;
+    $scope.mocks = app.store.mock.getMock();
   })
   //当前mock详细页
   .controller('CurrentMock', function ($scope, $stateParams) {
-    var nm = require('./netmock'), mocks = app.store.mocks || nm.mocks.getMocks() || {}, currentMock, routes;
-    if ($stateParams.name) {
-      currentMock = mocks[$stateParams.name];
-    }
-    else if (app.store.currentMock) {
-      currentMock = app.store.currentMock
-    }
-    else {
-      currentMock = mocks[Object.keys(mocks)[0]];
-    }
-    routes = currentMock ? nm.mocks.getRoutes(currentMock.name) : undefined;
+    var  currentMock = app.store.mock.getCurrentMock($stateParams.id), routes;
+    routes = currentMock ? nm.mocks.getRoutes(currentMock.id) : undefined;
     $scope.currentMock = currentMock;
     $scope.routes = routes;
-    app.store.currentMock = currentMock;
-
-    //标志当前选中项
-    for (var key in app.store.mocks) {
-      app.store.mocks[key].cls && (app.store.mocks[key].cls = undefined)
-    }
-    app.store.mocks[currentMock.name].cls = 'active';
-
+    currentMock.cls = 'active';
     //显示鼠标鼠标指向的route的自定义header
     $scope.showCustomHeaders = function (e) {
       var $target = $(e.target);
@@ -43,8 +23,28 @@ angular.module('httpmock.controllers', [])
       $(e.target).next('div').hide();
     };
   })
-  .controller('MockUpdate',function($scope){
-
+  .controller('UpdateMock', function ($scope, $stateParams, $state) {
+    var mock = new app.model.Mock();
+    $scope.title = $stateParams.id ? '编辑Mock' : '添加Mock';
+    if ($stateParams.id) {
+      mock = app.store.mock.getCurrentMock($stateParams.id);
+      mock.cls = 'active';
+    }
+    $scope.mock = angular.copy(mock);
+    $scope.update = function (formMock) {
+      var result = app.store.mock.updateMock(formMock);
+      $state.transitionTo('mocks.currentmock',formMock.id);
+    }
+  })
+  .controller('UpdateRoute', function ($scope, $stateParams, $state) {
+    var mock = app.store.mock.getCurrentMock($stateParams.mockid);
+    mock.cls = 'active';
+    $scope.statusCodes = app.STATUS_CODE;
+    $scope.statusCode = "200";
+    $scope.contentTypes = app.CONTENT_TYPE;
+    $scope.contentType = "json";
+    //$scope.CONTENT_TYPE = app.CONTENT_TYPE;
+      //$scope.mock = angular.copy(mock);
   })
   .controller('System', function ($scope) {
     $scope.a = 1;

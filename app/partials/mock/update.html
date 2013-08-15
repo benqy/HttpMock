@@ -1,47 +1,34 @@
-﻿<div class="modal hide fade">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>Modal header</h3>
-  </div>
-  <div class="modal-body">
+﻿<div>
     <form class="form-horizontal">
-    <div class="control-group">
-        <label class="control-label">域名</label>
-        <div class="controls">
-            <input type="text" name="name" placeholder="域名" value="">
+        <div class="control-group">
+            <label class="control-label">域名</label>
+            <div class="controls">
+                <input type="text" name="name" placeholder="域名" ng-model="mock.name">
+            </div>
         </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">端口</label>
-        <div class="controls">
-            <input type="text" name="port" value="80" placeholder="端口">
+        <div class="control-group">
+            <label class="control-label">端口</label>
+            <div class="controls">
+                <input type="text" name="port" placeholder="端口" ng-model="mock.port">
+            </div>
         </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">描述</label>
-        <div class="controls">
-            <textarea cols="30" rows="3" name="desc"></textarea>
+        <div class="control-group">
+            <label class="control-label">描述</label>
+            <div class="controls">
+                <textarea cols="30" rows="3" name="desc" ng-model="mock.desc"></textarea>
+            </div>
         </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">Mock类型</label>
-        <div class="controls">
-            <select name="mockType">
-                <option value="1">修改本地HOST</option>
-                <option value="2">客户端代理</option>
-            </select>
+        <div class="control-group">
+            <label class="control-label">Mock类型</label>
+            <div class="controls">
+                <select name="mockType" ng-model="mock.mockType">
+                    <option value="1">修改本地HOST</option>
+                    <option value="2">客户端代理</option>
+                </select>
+            </div>
         </div>
+    </form>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" ng-click="update(mock)">保存</button>
     </div>
-    <div class="control-group">
-        <div class="controls">
-            <button type="submit" class="btn">保存</button>
-        </div>
-    </div>
-</form>
-
-  </div>
-  <div class="modal-footer">
-    <a href="#" class="btn">Close</a>
-    <a href="#" class="btn btn-primary">Save changes</a>
-  </div>
 </div>

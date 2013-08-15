@@ -1,85 +1,87 @@
-﻿<h3>Mock信息</h3>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>域名</th>
-            <th>端口</th>
-            <th>描述</th>
-            <th>类型</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>{{currentMock.name}}</td>
-            <td>{{currentMock.port}}</td>
-            <td>{{currentMock.desc}}</td>
-            <td>{{currentMock.mockType | mockType}}</td>
-        </tr>
-    </tbody>
-</table>
-<div class="btn-group">
-    <a title="启动服务器" class="btn btn-info"><i class="icon-play  icon-white"></i></a>
-    <a title="编辑Mock" class="btn btn-info"><i class="icon-edit  icon-white"></i></a>
-    <a title="删除Mock" class="btn btn-info"><i class="icon-trash  icon-white"></i></a>
-    <a title="添加新的路由" class="btn btn-info"><i class="icon-plus  icon-white"></i></a>
-</div>
-<h3>路由列表</h3>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>
-                <div style="min-width: 62px">路径</div>
-            </th>
-            <th>
-                <div>状态</div>
-            </th>
-            <th>
-                <div style="min-width: 62px">延迟(ms)</div>
-            </th>
-            <th>
-                <div style="min-width: 65px">原始请求</div>
-            </th>
-            <th>
-                <div style="min-width: 65px">Headers</div>
-            </th>
-            <th>
-                <div style="min-width: 120px">Content Type</div>
-            </th>
-            <th>
-                <div style="min-width: 60px">Response</div>
-            </th>
-            <th>
-                <div style="min-width: 100px">操作</div>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="route in routes">
-            <td>{{$index+1}}</td>
-            <td>{{route.path}}</td>
-            <td>{{route.statusCode}}</td>
-            <td>{{route.delay}}</td>
-            <td>{{route.noProxy}}</td>
-            <td style="position: relative;">
-                <span style="width: 40px;text-align: center;" class="badge badge-info" ng-mouseover="showCustomHeaders($event)" ng-mouseleave="hideCustomHeaders($event)">{{route.customHeaders.length}}</span>
-                <div class="popover fade right in" style="display: none; width: 280px; height: 200px; top: -85px; left: 63px;">
-                    <div class="arrow"></div>
-                    <h3 class="popover-title">自定义Response Header</h3>
-                    <div class="popover-content">
-                        <p ng-repeat="header in route.customHeaders">{{header.name}}：{{header.value}}</p>
+﻿<div>
+    <h3>Mock信息</h3>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>域名</th>
+                <th>端口</th>
+                <th>描述</th>
+                <th>类型</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{currentMock.name}}</td>
+                <td>{{currentMock.port}}</td>
+                <td>{{currentMock.desc}}</td>
+                <td>{{currentMock.mockType | mockType}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="btn-group">
+        <a title="启动服务器" class="btn btn-info"><i class="icon-play  icon-white"></i></a>
+        <a title="编辑Mock" class="btn btn-info" href="#/mocks/update/{{currentMock.id}}"><i class="icon-edit  icon-white"></i></a>
+        <a title="删除Mock" class="btn btn-info"><i class="icon-trash  icon-white"></i></a>
+        <a title="添加新的路由" class="btn btn-info" href="#/mocks/updateroute/{{currentMock.id}}/"><i class="icon-plus  icon-white"></i></a>
+    </div>
+    <h3>路由列表</h3>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>
+                    <div style="min-width: 62px">路径</div>
+                </th>
+                <th>
+                    <div>状态</div>
+                </th>
+                <th>
+                    <div style="min-width: 62px">延迟(ms)</div>
+                </th>
+                <th>
+                    <div style="min-width: 65px">原始请求</div>
+                </th>
+                <th>
+                    <div style="min-width: 65px">Headers</div>
+                </th>
+                <th>
+                    <div style="min-width: 120px">Content Type</div>
+                </th>
+                <th>
+                    <div style="min-width: 60px">Response</div>
+                </th>
+                <th>
+                    <div style="min-width: 100px">操作</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="route in routes">
+                <td>{{$index+1}}</td>
+                <td>{{route.path}}</td>
+                <td>{{route.statusCode}}</td>
+                <td>{{route.delay}}</td>
+                <td>{{route.noProxy}}</td>
+                <td style="position: relative;">
+                    <span style="width: 40px; text-align: center;" class="badge badge-info" ng-mouseover="showCustomHeaders($event)" ng-mouseleave="hideCustomHeaders($event)">{{route.customHeaders.length}}</span>
+                    <div class="popover fade right in" style="display: none; width: 280px; height: 200px; top: -85px; left: 63px;">
+                        <div class="arrow"></div>
+                        <h3 class="popover-title">自定义Response Header</h3>
+                        <div class="popover-content">
+                            <p ng-repeat="header in route.customHeaders">{{header.name}}：{{header.value}}</p>
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td>{{route.contentType}}</td>
-            <td>{{route.responseData}}</td>
-            <td>
-                <div class="btn-group">
-                    <a href="javascript://" title="在浏览器打开" class="btn btn-info btn-mini"><i class="icon icon-share icon-white"></i></a>
-                    <a href="javascript://" title="编辑" class="btn btn-info btn-mini marginLeft3"><i class="icon icon-edit icon-white"></i></a>
-                    <a href="javascript://" title="删除" class="btn btn-info btn-mini marginLeft3"><i class="icon icon-trash icon-white"></i></a>
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
+                </td>
+                <td>{{route.contentType}}</td>
+                <td>{{route.responseData}}</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="javascript://" title="在浏览器打开" class="btn btn-info btn-mini"><i class="icon icon-share icon-white"></i></a>
+                        <a href="javascript://" title="编辑" class="btn btn-info btn-mini marginLeft3"><i class="icon icon-edit icon-white"></i></a>
+                        <a href="javascript://" title="删除" class="btn btn-info btn-mini marginLeft3"><i class="icon icon-trash icon-white"></i></a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

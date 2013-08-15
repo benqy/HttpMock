@@ -6,28 +6,34 @@ var getMocks = function () {
   return util.readJsonSync(DIR_BASE + 'mocks.json');
 };
 
-var addMock = function (data, oldModal) {
-  if (!data || !data.name) return { status: 'error', msg: '请填写完整' };
+var addMock = function (data) {
+  //验证
+  if (!data || !data.name) return { success: false, msg: '请填写完整' };
   if (~data.name.indexOf('://')) {
     data.name = require('url').parse(data.name, true).host || data.name;
   }
-  if (!/^[a-z1-9\.]*$/.test(data.name)) return { status: 'error', msg: '域名格式错误' };
-  if (isNaN(data.port)) return { status: 'error', msg: '必须指定正确的端口' };
+  if (!/^[a-z1-9\.]*$/.test(data.name)) return { success: false, msg: '域名格式错误' };
+  if (isNaN(data.port)) return { success: false, msg: '必须指定正确的端口' };
+
   mocks = getMocks();
-  if (oldModal && oldModal.name != data.name) {
-    delete mocks[oldModal.name];
+  //如果名称改变了,则删除并创建一个新的.
+  //if (oldModal && oldModal.name != data.name) {
+  //  delete mocks[oldModal.name];
+  //}
+  if (!data.id) {
+    data.id = util.generalId();
   }
-  mocks[data.name] = data;
+  mocks[data.id] = data;
   util.writeFileSync(DIR_BASE + 'mocks.json', JSON.stringify(mocks));
-  if (oldModal && oldModal.name != data.name) {
-    var routes = getRoutes(oldModal.name);
-    Object.keys(routes).forEach(function (key) {
-      routes[key].mockName = data.name;
-    });
-    util.writeFileSync(DIR_BASE + oldModal.name + '.json', JSON.stringify(routes));
-    util.renameSync(DIR_BASE + oldModal.name + '.json', DIR_BASE + data.name + '.json');
-  }
-  return { status: 'success', msg: 'success' };
+  //if (oldModal && oldModal.name != data.name) {
+  //  var routes = getRoutes(oldModal.name);
+  //  Object.keys(routes).forEach(function (key) {
+  //    routes[key].mockName = data.name;
+  //  });
+  //  util.writeFileSync(DIR_BASE + oldModal.name + '.json', JSON.stringify(routes));
+  //  util.renameSync(DIR_BASE + oldModal.name + '.json', DIR_BASE + data.name + '.json');
+  //}
+  return { success: true, msg: 'success' };
 };
 
 var delMock = function (mock) {
