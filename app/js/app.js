@@ -23,7 +23,7 @@
       delete mock.cls;
       delete mock.$$hashKey;
       //保存数据
-      result = nm.mocks.addMock(mock);
+      result = nm.mocks.updateMock(mock);
       //更新model
       if (result.success) {
         if (oldMock) {
