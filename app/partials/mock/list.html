@@ -1,12 +1,10 @@
-﻿<div class="row-fluid">
-    <div class="span2 sidebar">
-        <h4>Mock列表<a title="添加新的路由" href="#/mock/update" class="btn btn-info btn-mini"><i class="icon-plus  icon-white"></i></a></h4>
-        <ul class="nav nav-list">
-            <li ng-repeat="mock in mocks" ng-class="mock.cls">
-                <a href="#/mocks/{{mock.name}}">{{mock.name}}</a>
-            </li>
-        </ul>
-    </div>
-    <div class="span10" ui-view>
-    </div>
+﻿<div class="sidebar">
+    <h4>Mock列表<a title="添加新的路由" href="#/mock/update" class="btn btn-info btn-mini"><i class="icon-plus  icon-white"></i></a></h4>
+    <ul class="nav nav-list">
+        <li ng-repeat="mock in mocks" ng-class="mock.cls">
+            <a href="#/mocks/{{mock.name}}">{{mock.name}}</a>
+        </li>
+    </ul>
+</div>
+<div class="container-right" ui-view>
 </div>

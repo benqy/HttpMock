@@ -19,20 +19,20 @@ $(function () {
 //    $routeProvider.otherwise({ redirectTo: '/mock/list' });
 //  }]);
 angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controllers'])
-.config(function ($stateProvider, $urlRouterProvider) {
+  .config(function ($stateProvider, $urlRouterProvider) {
 
-  // For any unmatched url, send to /route1
-  $urlRouterProvider.otherwise("/mocks")
+    $urlRouterProvider.otherwise("/mocks/");
+    $stateProvider
+      .state('mocks', {
+        url: "/mocks",
+        templateUrl: "partials/mock/list.html",
+        controller: 'Mocks'
+      })
+      .state('mocks.currentmock', {
+        url: "/{name}",
+        templateUrl: "partials/mock/detail.html",
+        controller: 'CurrentMock'
+      })
+  });
 
-  $stateProvider
-    .state('mocks', {
-      url: "/mocks",
-      templateUrl: "partials/mock/list.html",
-      controller: 'Mocks'
-    })
-    .state('mocks.currentmock', {
-      url: "/{name}",
-      templateUrl: "partials/mock/detail.html",
-      controller: 'CurrentMock'
-    })
-});
+

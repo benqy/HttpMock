@@ -34,7 +34,10 @@ angular.module('httpmock.controllers', [])
 
     //显示鼠标鼠标指向的route的自定义header
     $scope.showCustomHeaders = function (e) {
-      $(e.target).next('div').show();
+      var $target = $(e.target);
+      if(0 !== parseInt($target.text())){
+        $target.next('div').show();
+      }
     };
     $scope.hideCustomHeaders = function (e) {
       $(e.target).next('div').hide();

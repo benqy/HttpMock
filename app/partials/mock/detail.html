@@ -32,7 +32,7 @@
                 <div style="min-width: 62px">路径</div>
             </th>
             <th>
-                <div style="min-width: 62px">状态</div>
+                <div>状态</div>
             </th>
             <th>
                 <div style="min-width: 62px">延迟(ms)</div>
@@ -62,8 +62,8 @@
             <td>{{route.delay}}</td>
             <td>{{route.noProxy}}</td>
             <td style="position: relative;">
-                <span class="badge badge-info" ng-mouseover="showCustomHeaders($event)" ng-mouseleave="hideCustomHeaders($event)">{{route.customHeaders.length}}</span>
-                <div class="popover fade right in" style="display: none; width: 280px; height: 200px; top: -85px; left: 35px;">
+                <span style="width: 40px;text-align: center;" class="badge badge-info" ng-mouseover="showCustomHeaders($event)" ng-mouseleave="hideCustomHeaders($event)">{{route.customHeaders.length}}</span>
+                <div class="popover fade right in" style="display: none; width: 280px; height: 200px; top: -85px; left: 63px;">
                     <div class="arrow"></div>
                     <h3 class="popover-title">自定义Response Header</h3>
                     <div class="popover-content">
