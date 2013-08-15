@@ -70,7 +70,7 @@ var delMock = function (id) {
  * @returns {Object} 保存是否成功 {success:boolean,msg:string}.
  */
 var updateRoute = function (data) {
-  if (!data || !data.path || (data.delay && isNaN(parseInt(data.delay, 10))) || !data.mockName) {
+  if (!data || !data.path || (data.delay && isNaN(parseInt(data.delay, 10))) || !data.mockId) {
     return { success: false, msg: '错误' };
   };
   var routes, fileName = DIR_BASE + data.mockId + '.json';

@@ -3,20 +3,20 @@
         <div class="control-group">
             <label class="control-label">路径</label>
             <div class="controls">
-                <input type="text" name="path" placeholder="路径" value="/">
+                <input type="text" name="path" ng-model="route.path" placeholder="路径" value="/">
             </div>
         </div>
         <div class="control-group">
             <label class="control-label">Status Code</label>
             <div class="controls">
-                <select name="statusCode" ng-model="statusCode" ng-options="k as v for (k, v) in statusCodes">
+                <select name="statusCode" ng-model="route.statusCode" ng-options="k as v for (k, v) in statusCodes">
                 </select>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label">延迟</label>
             <div class="input-append">
-                <input class="span2" name="delay" placeholder="延迟" type="number">
+                <input class="span2" name="delay" ng-model="route.delay" placeholder="延迟" type="number">
                 <span class="add-on">毫秒</span>
             </div>
         </div>
@@ -24,7 +24,7 @@
             <label class="control-label" for="routeStatusCode">代理设置</label>
             <div class="controls">
                 <label class="checkbox">
-                    <input type="checkbox" name="noProxy">
+                    <input type="checkbox" ng-model="route.noProxy" name="noProxy">
                     请求原始地址
                 </label>
             </div>
@@ -32,7 +32,7 @@
         <div class="control-group">
             <label class="control-label">Content Type</label>
             <div class="controls">
-                <select name="contentType" ng-model="contentType" ng-options="v as k for (k, v) in contentTypes">
+                <select name="contentType" ng-model="route.contentType" ng-options="k as k for (k, v) in contentTypes">
                 </select>
             </div>
         </div>
@@ -49,7 +49,7 @@
         </div>
         <div class="controls">
             <label class="checkbox">
-                <input type="checkbox" name="customHandler">
+                <input type="checkbox" name="customHandler" ng-model="route.customHandler">
                 自定义函数(返回值作为函数运行,并返回运行结果)
                         <a class="btn btn-small marginLeft3" id="curtomHandlerHelpBtn" href="javascript://" data-toggle="popover" data-original-title="自定义处理函数">帮助</a>
             </label>
@@ -57,11 +57,11 @@
         <div class="control-group">
             <label class="control-label">返回值</label>
             <div class="controls">
-                <textarea cols="70" rows="4" name="responseData"></textarea>
+                <textarea cols="70" rows="4" name="responseData" ng-model="route.responseData"></textarea>
             </div>
         </div>
     </form>
         <div class="form-actions">
-        <button type="submit" class="btn btn-primary" ng-click="update(mock)">保存</button>
+        <button type="submit" class="btn btn-primary" ng-click="update(route)">保存</button>
     </div>
 </div>

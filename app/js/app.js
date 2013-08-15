@@ -10,6 +10,13 @@
         this.port = option.port || 80;
         this.desc = option.desc;
         this.mockType = option.mockType || 1;
+      },
+      Route: function (mockId) {
+        this.path = '/';
+        this.statusCode = "200";
+        this.contentType = "text/plain";
+        this.noproxy = false;
+        this.customHandler = false;
       }
     }
   };
@@ -43,6 +50,20 @@
       return mocks[id];
     }
   };
+
+  app.store.route = {
+    getRoute: function (mockId,routeId) {
+      var routes = nm.mocks.getRoutes(mockId);
+      if (routeId) {
+        return routes ? routes[routeId] : {};
+      }
+      return routes;
+    },
+    updateRoute: function (route) {
+      delete route.$$hashKey;
+      return nm.mocks.updateRoute(route);
+    }
+  }
 })(this);
 
 $(function () {
