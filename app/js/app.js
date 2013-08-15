@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 this.app = {
-  current: {}
+  store: {}
 };
 
 $(function () {
@@ -22,7 +22,7 @@ angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controller
 .config(function ($stateProvider, $urlRouterProvider) {
 
   // For any unmatched url, send to /route1
-  //$urlRouterProvider.otherwise("/route1")
+  $urlRouterProvider.otherwise("/mocks")
 
   $stateProvider
     .state('mocks', {
