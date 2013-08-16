@@ -60,6 +60,10 @@ angular.module('httpmock.controllers', [])
   })
   .controller('UpdateRoute', function ($scope, $stateParams, $state) {
     var currentMock = app.store.mock.getCurrentMock($stateParams.mockid), route = new app.model.Route($stateParams.mockid);
+    if (window.dragToAddRoute) {
+      route = window.dragToAddRoute;
+      window.dragToAddRoute = undefined;
+    }
     currentMock.cls = 'active';
     $scope.statusCodes = app.STATUS_CODE;
     $scope.contentTypes = app.CONTENT_TYPE;

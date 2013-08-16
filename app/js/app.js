@@ -1,6 +1,6 @@
 ﻿'use strict';
 (function (global) {
-  var nm = require('./netmock'), mocks = nm.mocks.getMocks(), app;
+  var nm = require('./netmock'), mocks = nm.mocks.getMocks(), app, currentMock;
   app = global.app = {
     store: {},
     model: {
@@ -12,12 +12,13 @@
         this.mockType = option.mockType || 1;
       },
       Route: function (mockId) {
+        this.mockId = mockId;
         this.path = '/';
         this.statusCode = "200";
         this.contentType = "text/plain";
         this.noproxy = false;
         this.customHandler = false;
-        this.customHeaders = [{name:'',value:''}];
+        this.customHeaders = [{ name: '', value: '' }];
       }
     }
   };
@@ -46,10 +47,16 @@
       return result;
     },
     getCurrentMock: function (id) {
-      if(id)return mocks[id];
-      for (var key in mocks) {
-        return mocks[key];
+      if (id) {
+        currentMock = mocks[id];
       }
+      else if (!currentMock) {
+        for (var key in mocks) {
+          currentMock = mocks[key];
+          break;
+        }
+      }
+      return currentMock;;
     },
     delMock: function (id) {
       var result = nm.mocks.delMock(id);
@@ -73,7 +80,7 @@
     delRoute: function (mockId, id) {
       return nm.mocks.delRoute(mockId, id);
     }
-  };
+  };;
 
   app.store.systemSetting = {
     getSystemSetting: function () {
@@ -82,7 +89,64 @@
     update: function (ss) {
       return nm.saveSystemSetting(ss)
     }
-  }
+  };
+
+  /**
+ * @name onFileDrag
+ * @function
+ *
+ * @description 响应window的文件拖放事件,根据拖放的文件创建mock
+ * @returns undefined
+ */
+  app.onFileDrag = function () {
+    //拖动文件
+    window.ondragover = function (e) { e.preventDefault(); return false; };
+    window.ondrop = function (e) { e.preventDefault(); return false; };
+    //拖动文件
+    document.ondrop = function (e) {
+      e.preventDefault();
+      var mock = app.store.mock.getCurrentMock(), ct, path, pathArr, filename, route = new app.model.Route(mock.id);
+      if (!mock) return;
+      if (!e.dataTransfer.files.length) return;
+      //返回值
+      path = e.dataTransfer.files[0].path;
+      route.responseData = path;
+      //根据后缀名判断类型
+      if (~path.indexOf('.js')) {
+        route.contentType = 'application/x-javascript';
+      }
+      else if (~path.indexOf('.html') || ~path.indexOf('.shtml')) {
+        route.contentType = 'text/html';
+      }
+      else if (~path.indexOf('.css')) {
+        route.contentType = 'val', 'text/css';
+      }
+      else if (~path.indexOf('.jpg')) {
+        route.contentType = 'image/jpeg';
+      }
+      else if (~path.indexOf('.png')) {
+        route.contentType = 'image/png';
+      }
+      else if (~path.indexOf('.gif')) {
+        route.contentType = 'image/gif';
+      }
+      else if (~path.indexOf('.bmp')) {
+        route.contentType = 'image/bmp';
+      }
+      else {
+        route.contentType = 'application/x-msdownload';
+      }
+      //路由名
+      pathArr = path.split('\\');
+      if (pathArr.length) {
+        filename = pathArr[pathArr.length - 1];
+        route.path = '/' + filename;
+      }
+      console.log(route);
+      window.dragToAddRoute = route;
+      window.location.href = '#/mocks/updateroute/' + mock.id + '/';
+    };
+  };
 })(this);
 
 $(function () {
@@ -142,4 +206,4 @@ angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controller
       });
   });
 
-
+app.onFileDrag();
