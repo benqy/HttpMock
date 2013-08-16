@@ -13,7 +13,6 @@ angular.module('httpmock.controllers', [])
     }
     $scope.currentMock = currentMock;
     $scope.routes = routes;
-    currentMock.cls = 'active';
     //显示鼠标鼠标指向的route的自定义header
     $scope.showCustomHeaders = function (e) {
       var $target = $(e.target);
@@ -38,12 +37,14 @@ angular.module('httpmock.controllers', [])
         }
       }
     };
+    $scope.runServer = function (mock) {
+      app.store.mock.run(mock.id)
+    }
   })
   .controller('UpdateMock', function ($scope, $stateParams, $state) {
     var mock = new app.model.Mock();
     if ($stateParams.id) {
       mock = app.store.mock.getCurrentMock($stateParams.id);
-      mock.cls = 'active';
     }
     $scope.title = $stateParams.id ? '编辑Mock:' + mock.name : '新建Mock';
     $scope.mock = angular.copy(mock);
@@ -64,7 +65,6 @@ angular.module('httpmock.controllers', [])
       route = window.dragToAddRoute;
       window.dragToAddRoute = undefined;
     }
-    currentMock.cls = 'active';
     $scope.statusCodes = app.STATUS_CODE;
     $scope.contentTypes = app.CONTENT_TYPE;
     $stateParams.id && (route = app.store.route.getRoute(currentMock.id, $stateParams.id));

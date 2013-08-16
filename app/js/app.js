@@ -31,6 +31,7 @@
       var oldMock = mocks[mock.id], result;
       delete mock.cls;
       delete mock.$$hashKey;
+      delete mock.runningStatus;
       //保存数据
       result = nm.mocks.updateMock(mock);
       //更新model
@@ -56,12 +57,19 @@
           break;
         }
       }
+      currentMock.cls = 'active';
       return currentMock;;
     },
     delMock: function (id) {
       var result = nm.mocks.delMock(id);
       result.success && delete mocks[id];
       return result;
+    },
+    run: function (mockId) {
+      mocks[mockId].runningStatus = 'running';
+    },
+    stop: function () {
+      mocks[mockId].runningStatus = 'stop';
     }
   };
 
@@ -80,7 +88,7 @@
     delRoute: function (mockId, id) {
       return nm.mocks.delRoute(mockId, id);
     }
-  };;
+  };
 
   app.store.systemSetting = {
     getSystemSetting: function () {
