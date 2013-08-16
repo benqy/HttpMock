@@ -73,12 +73,10 @@ angular.module('httpmock.controllers', [])
     $scope.update = function (formRoute) {
       formRoute.mockId = currentMock.id;
       var result = app.store.route.updateRoute(formRoute);
-      console.log(result)
       if (result.success) {
         $state.transitionTo('mocks.currentmock', { id: currentMock.id });
       }
       else {
-
         $scope.errorMsg = result.msg;
       }
     };
@@ -97,5 +95,21 @@ angular.module('httpmock.controllers', [])
     };
   })
   .controller('System', function ($scope) {
-    $scope.a = 1;
+    $scope.systemSetting = app.store.systemSetting.getSystemSetting();
+    $scope.addGlobalHeader = function () {
+      $scope.systemSetting.globalHeaders = $scope.systemSetting.globalHeaders || [];
+      $scope.systemSetting.globalHeaders.push({ name: '', value: '' });
+    };
+    $scope.update = function (systemSetting) {
+      if (!systemSetting.storeDir) {
+        systemSetting.storeDir = require('nw.gui').App.dataPath[0];
+      }
+      var result = app.store.systemSetting.update(systemSetting);
+      if (result.success) {
+        alert('保存成功');
+      }
+      else {
+        $scope.errorMsg = result.msg;
+      }
+    };
   });

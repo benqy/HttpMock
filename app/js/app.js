@@ -59,7 +59,7 @@
   };
 
   app.store.route = {
-    getRoute: function (mockId,routeId) {
+    getRoute: function (mockId, routeId) {
       var routes = nm.mocks.getRoutes(mockId);
       if (routeId) {
         return routes ? routes[routeId] : {};
@@ -70,8 +70,17 @@
       delete route.$$hashKey;
       return nm.mocks.updateRoute(route);
     },
-    delRoute: function (mockId,id) {
-      return nm.mocks.delRoute(mockId,id);
+    delRoute: function (mockId, id) {
+      return nm.mocks.delRoute(mockId, id);
+    }
+  };
+
+  app.store.systemSetting = {
+    getSystemSetting: function () {
+      return nm.getSystemSetting();
+    },
+    update: function (ss) {
+      return nm.saveSystemSetting(ss)
     }
   }
 })(this);
@@ -83,13 +92,6 @@ $(function () {
   });
 });
 
-//angular.module('httpmock', ['httpmock.filters', 'httpmock.services', 'httpmock.directives', 'httpmock.controllers'])
-//  .config(['$routeProvider', function ($routeProvider) {
-//    $routeProvider.when('/mock/list', { templateUrl: 'partials/mock/list.html', view: 'subsection', controller: 'Mocks' });
-//    $routeProvider.when('/mock/update', { templateUrl: 'partials/mock/update.html', controller: 'MockUpdate' });
-//    $routeProvider.when('/system', { templateUrl: 'partials/system.html', controller: 'System' });
-//    $routeProvider.otherwise({ redirectTo: '/mock/list' });
-//  }]);
 angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controllers'])
   .config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/mocks/");

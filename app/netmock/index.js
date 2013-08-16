@@ -441,12 +441,19 @@ module.exports = {
     return setting;
   },
   saveSystemSetting: function (data) {
+    var globalHeaders = [];
     if (!fs.existsSync(data.storeDir)) {
-      return { status: 'error', msg: '路径不存在' };
+      return { success: false, msg: '路径不存在' };
     }
+    if (data.globalHeaders) {
+      data.globalHeaders.forEach(function (item) {
+        if (item.name && item.value) globalHeaders.push(item);
+      });
+    }
+    data.globalHeaders = globalHeaders;
     util.writeFileSync(SYSTEM_SETTING_FILE, JSON.stringify(data));
     systemSetting = data;
-    return { status: 'success', msg: 'success' };
+    return { success: true, msg: 'success' };
   },
   setSystemSettingFile: function (filename) {
     SYSTEM_SETTING_FILE = filename;
