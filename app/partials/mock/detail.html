@@ -21,7 +21,7 @@
     <div class="btn-group">
         <a title="启动服务器" class="btn btn-info"><i class="icon-play  icon-white"></i></a>
         <a title="编辑Mock" class="btn btn-info" href="#/mocks/update/{{currentMock.id}}"><i class="icon-edit  icon-white"></i></a>
-        <a title="删除Mock" class="btn btn-info"><i class="icon-trash  icon-white"></i></a>
+        <a title="删除Mock"  ng-click="delMock(currentMock)" class="btn btn-info"><i class="icon-trash  icon-white"></i></a>
         <a title="添加新的路由" class="btn btn-info" href="#/mocks/updateroute/{{currentMock.id}}/"><i class="icon-plus  icon-white"></i></a>
     </div>
     <h3>路由列表</h3>
@@ -78,7 +78,7 @@
                     <div class="btn-group">
                         <a href="javascript://" title="在浏览器打开" class="btn btn-info btn-mini"><i class="icon icon-share icon-white"></i></a>
                         <a href="#/mocks/updateroute/{{currentMock.id}}/{{route.id}}" title="编辑" class="btn btn-info btn-mini marginLeft3"><i class="icon icon-edit icon-white"></i></a>
-                        <a href="javascript://" title="删除" class="btn btn-info btn-mini marginLeft3"><i class="icon icon-trash icon-white"></i></a>
+                        <a href="javascript://" title="删除" ng-click="delRoute(route)" class="btn btn-info btn-mini marginLeft3"><i class="icon icon-trash icon-white"></i></a>
                     </div>
                 </td>
             </tr>

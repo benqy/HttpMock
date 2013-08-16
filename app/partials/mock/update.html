@@ -1,15 +1,20 @@
 ﻿<div>
-    <form class="form-horizontal">
-        <div class="control-group">
+    <h3>{{title}}</h3>
+    <form name="mockForm" class="form-horizontal">
+        <div class="control-group" ng-class="{error:mockForm.name.$error.required || mockForm.name.$error.pattern}">
             <label class="control-label">域名</label>
             <div class="controls">
-                <input type="text" name="name" placeholder="域名" ng-model="mock.name">
+                <input type="text" name="name" placeholder="域名" ng-model="mock.name" required ng-pattern="/^[a-z1-9\.]*$/">
+                <span class="help-inline" ng-show="mockForm.name.$error.required">域名不能为空</span>
+                <span class="help-inline" ng-show="mockForm.name.$error.pattern">域名只能使用字母数字和"."</span>
             </div>
         </div>
-        <div class="control-group">
+        <div class="control-group" ng-class="{error:mockForm.port.$error.required || mockForm.port.$error.pattern || mockForm.port.$error.min || mockForm.port.$error.max}">
             <label class="control-label">端口</label>
             <div class="controls">
-                <input type="text" name="port" placeholder="端口" ng-model="mock.port">
+                <input type="number" min="0" max="65535" name="port" placeholder="端口" ng-model="mock.port" required ng-pattern="/^[0-9]*$/">
+                <span class="error-msg help-inline" ng-show="mockForm.port.$error.required">端口不能为空</span>
+                <span class="error-msg help-inline" ng-show="mockForm.port.$error.pattern || mockForm.port.$error.min || mockForm.port.$error.max">端口只能是0-65535范围内的数字</span>
             </div>
         </div>
         <div class="control-group">
@@ -27,8 +32,9 @@
                 </select>
             </div>
         </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" ng-disabled="mockForm.$invalid" ng-click="update(mock)">保存</button>
+            <span class="error-msg" ng-show="errorMsg">{{errorMsg}}</span>
+        </div>
     </form>
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary" ng-click="update(mock)">保存</button>
-    </div>
 </div>

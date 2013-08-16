@@ -73,14 +73,26 @@ var updateRoute = function (data) {
   if (!data || !data.path || (data.delay && isNaN(parseInt(data.delay, 10))) || !data.mockId) {
     return { success: false, msg: '错误' };
   };
-  var routes, fileName = DIR_BASE + data.mockId + '.json';
+  var routes, fileName = DIR_BASE + data.mockId + '.json', customHeaders = [];
   if (fs.existsSync(fileName)) {
     routes = util.readJsonSync(fileName);
   }
   routes = routes || {};
+  //如果不存在id,则为新建,需要判断path是否重复,并且生成一个id
   if (!data.id) {
+    for (var key in routes) {
+      if (routes[key].path === data.path) {
+        return { success: false, msg: '同一mock的路径不可重复' };
+      }
+    }
     data.id = util.generalId();
   }
+  if (data.customHeaders) {
+    data.customHeaders.forEach(function (item) {
+      if (item.name && item.value) customHeaders.push(item);
+    });
+  }
+  data.customHeaders = customHeaders;
   routes[data.id] = data;
   util.writeFileSync(fileName, JSON.stringify(routes));
   return { success: true, msg: 'success' };
@@ -94,11 +106,12 @@ var updateRoute = function (data) {
  * @param {string} id 要删除的route的id
  * @returns {Object} 删除是否成功 {success:boolean,msg:string}.
  */
-var delRoute = function (id) {
-  var routes, fileName = DIR_BASE + id + '.json';
+var delRoute = function (mockId,id) {
+  var routes, fileName = DIR_BASE + mockId + '.json';
   if (fs.existsSync(fileName)) {
     routes = util.readJsonSync(fileName);
   }
+  console.log(routes,id)
   if (!routes || !routes[id]) return { success: false, msg: '不存在' };
   delete routes[id];
   util.writeFileSync(fileName, JSON.stringify(routes));

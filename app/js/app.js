@@ -17,6 +17,7 @@
         this.contentType = "text/plain";
         this.noproxy = false;
         this.customHandler = false;
+        this.customHeaders = [{name:'',value:''}];
       }
     }
   };
@@ -35,7 +36,6 @@
       if (result.success) {
         if (oldMock) {
           for (var key in mock) {
-            console.log(key)
             oldMock[key] = mock[key];
           }
         }
@@ -46,8 +46,15 @@
       return result;
     },
     getCurrentMock: function (id) {
-      id = id || Object.keys(mocks)[0];
-      return mocks[id];
+      if(id)return mocks[id];
+      for (var key in mocks) {
+        return mocks[key];
+      }
+    },
+    delMock: function (id) {
+      var result = nm.mocks.delMock(id);
+      result.success && delete mocks[id];
+      return result;
     }
   };
 
@@ -62,6 +69,9 @@
     updateRoute: function (route) {
       delete route.$$hashKey;
       return nm.mocks.updateRoute(route);
+    },
+    delRoute: function (mockId,id) {
+      return nm.mocks.delRoute(mockId,id);
     }
   }
 })(this);

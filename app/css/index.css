@@ -287,3 +287,8 @@ to prevent collapsing during animation*/
     height: 30px;
     opacity: 1;
 }
+
+/*表单*/
+.error-msg{
+    color:red;
+}

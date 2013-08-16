@@ -4,9 +4,13 @@ angular.module('httpmock.controllers', [])
   .controller('Mocks', function ($scope) {
     $scope.mocks = app.store.mock.getMock();
   })
-  .controller('CurrentMock', function ($scope, $stateParams) {
+  .controller('CurrentMock', function ($scope, $stateParams, $state) {
     var  currentMock = app.store.mock.getCurrentMock($stateParams.id), routes;
     routes = currentMock ? nm.mocks.getRoutes(currentMock.id) : undefined;
+    if (!currentMock || !currentMock.id) {
+      $state.transitionTo('mocks');
+      return;
+    }
     $scope.currentMock = currentMock;
     $scope.routes = routes;
     currentMock.cls = 'active';
@@ -20,18 +24,38 @@ angular.module('httpmock.controllers', [])
     $scope.hideCustomHeaders = function (e) {
       $(e.target).next('div').hide();
     };
+    $scope.delRoute = function (route) {
+      if (confirm('确认删除路径  ' + route.path)) {
+        if (app.store.route.delRoute(route.mockId, route.id).success) {
+          delete $scope.routes[route.id];
+        }
+      }
+    };
+    $scope.delMock = function (mock) {
+      if (confirm('确认删除Mock : ' + mock.name)) {
+        if (app.store.mock.delMock(mock.id).success) {
+          $state.transitionTo('mocks.currentmock', {});
+        }
+      }
+    };
   })
   .controller('UpdateMock', function ($scope, $stateParams, $state) {
     var mock = new app.model.Mock();
-    $scope.title = $stateParams.id ? '编辑Mock' : '添加Mock';
     if ($stateParams.id) {
       mock = app.store.mock.getCurrentMock($stateParams.id);
       mock.cls = 'active';
     }
+    $scope.title = $stateParams.id ? '编辑Mock:' + mock.name : '新建Mock';
     $scope.mock = angular.copy(mock);
+    $scope.errorMsg = '';
     $scope.update = function (formMock) {
       var result = app.store.mock.updateMock(formMock);
-      $state.transitionTo('mocks.currentmock', formMock.id);
+      if (result.success) {
+        $state.transitionTo('mocks.currentmock', { id: formMock.id });
+      }
+      else {
+        $scope.errorMsg = result.msg;
+      }
     };
   })
   .controller('UpdateRoute', function ($scope, $stateParams, $state) {
@@ -41,11 +65,35 @@ angular.module('httpmock.controllers', [])
     $scope.contentTypes = app.CONTENT_TYPE;
     $stateParams.id && (route = app.store.route.getRoute(currentMock.id, $stateParams.id));
     $scope.route = angular.copy(route);
+    
+    $scope.route.customHeaders = $scope.route.customHeaders || [];
+    if (!$scope.route.customHeaders[0]) {
+      $scope.route.customHeaders.push({ name: '', value: '' });
+    }
     $scope.update = function (formRoute) {
       formRoute.mockId = currentMock.id;
       var result = app.store.route.updateRoute(formRoute);
-      console.log(result);
-      $state.transitionTo('mocks.currentmock', currentMock.id);
+      console.log(result)
+      if (result.success) {
+        $state.transitionTo('mocks.currentmock', { id: currentMock.id });
+      }
+      else {
+
+        $scope.errorMsg = result.msg;
+      }
+    };
+    $scope.addCustomType = function () {
+      $scope.route.customHeaders = $scope.route.customHeaders || [];
+      $scope.route.customHeaders.push({ name: '', value: '' });
+    };
+    $scope.showHelp = function (e) {
+      var $target = $(e.target);
+      if (0 !== parseInt($target.text())) {
+        $target.next('div').show();
+      }
+    };
+    $scope.hideHelp = function (e) {
+      $(e.target).next('div').hide();
     };
   })
   .controller('System', function ($scope) {

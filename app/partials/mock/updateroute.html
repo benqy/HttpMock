@@ -1,9 +1,11 @@
 ﻿<div class="route-update">
-    <form class="form-horizontal">
-        <div class="control-group">
+    <form  name="routeForm" class="form-horizontal">
+        <div class="control-group"  ng-class="{error:routeForm.path.$error.required || routeForm.path.$error.pattern}">
             <label class="control-label">路径</label>
             <div class="controls">
-                <input type="text" name="path" ng-model="route.path" placeholder="路径" value="/">
+                <input type="text" name="path" ng-model="route.path" placeholder="路径" value="/" required ng-pattern="/^\/[\w-_]*$/">
+                <span class="help-inline" ng-show="routeForm.path.$error.required">路径不能为空</span>
+                <span class="help-inline" ng-show="routeForm.path.$error.pattern">路径必须以/开头,不能使用特殊字符</span>
             </div>
         </div>
         <div class="control-group">
@@ -13,10 +15,10 @@
                 </select>
             </div>
         </div>
-        <div class="control-group">
+        <div class="control-group" ng-class="{error:routeForm.delay.$error.min}">
             <label class="control-label">延迟</label>
             <div class="input-append">
-                <input class="span2" name="delay" ng-model="route.delay" placeholder="延迟" type="number">
+                <input class="span2" min="1" name="delay" ng-model="route.delay" placeholder="必须为大于0的数字" type="number">
                 <span class="add-on">毫秒</span>
             </div>
         </div>
@@ -39,19 +41,30 @@
         <div class="control-group">
             <label class="control-label">自定义Header</label>
             <div class="controls" id="addCustomHeaderContainer">
-                <p class="customCustomHeader firstCustomHeader">
-                    <input class="span2 headerName" type="text">
+                <p class="customCustomHeader firstCustomHeader" ng-repeat="ct in route.customHeaders">
+                    <input class="span2 headerName" placeholder="清空即可删除" type="text" ng-model="ct.name">
                     :
-                        <input class="span3 headerValue" type="text">
-                    <a href="javascript://" class="btn btn-success btn-mini btn-add-header" id="addCustomHeader"><i class="icon icon-plus icon-white"></i></a>
+                        <input class="span3 headerValue" placeholder="清空即可删除" type="text" ng-model="ct.value"> <a href="javascript://" class="btn btn-success btn-mini btn-add-header" ng-click="addCustomType()"><i class="icon icon-plus icon-white"></i></a>
                 </p>
+
             </div>
         </div>
-        <div class="controls">
+        <div class="controls" style="position:relative;">
             <label class="checkbox">
                 <input type="checkbox" name="customHandler" ng-model="route.customHandler">
                 自定义函数(返回值作为函数运行,并返回运行结果)
-                        <a class="btn btn-small marginLeft3" id="curtomHandlerHelpBtn" href="javascript://" data-toggle="popover" data-original-title="自定义处理函数">帮助</a>
+                        <a ng-mouseover="showHelp($event)" ng-mouseleave="hideHelp($event)"  class="btn btn-small marginLeft3" href="javascript://" data-toggle="popover">帮助</a>
+                <div class="popover fade left in" style="top: -122px; left: 49px; display: hide;"><div class="arrow"></div><h3 class="popover-title">自定义处理函数</h3><div class="popover-content">
+            <p>如果勾选此项,则请求会把返回值里的内容当作函数体来执行.函数的签名如下:</p>
+<pre><code>
+function(query){
+    //这里执行返回值里填写的内容,
+    //query为url参数,例如:
+    //www.1.com?a=1&amp;b=2
+    //query = {a:1,b:2}
+}
+</code></pre>
+        </div></div>
             </label>
         </div>
         <div class="control-group">
@@ -60,8 +73,10 @@
                 <textarea cols="70" rows="4" name="responseData" ng-model="route.responseData"></textarea>
             </div>
         </div>
-    </form>
+        
         <div class="form-actions">
-        <button type="submit" class="btn btn-primary" ng-click="update(route)">保存</button>
+        <button type="submit"  ng-disabled="routeForm.$invalid" class="btn btn-primary" ng-click="update(route)">保存</button>
+        <span class="error-msg" ng-show="errorMsg">{{errorMsg}}</span>
     </div>
+    </form>
 </div>
