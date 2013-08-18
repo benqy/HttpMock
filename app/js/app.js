@@ -145,6 +145,9 @@
     if (data.mock) {
       serverStatus.mock = mocks[data.mock.id];
     }
+    else {
+      serverStatus.mock = null;
+    }
     serverStatus.status = data.status;
     //异步的,要手动执行数据检测,但是start方法可能是异步也可能是同步,如果是同步则报异常
     try{
