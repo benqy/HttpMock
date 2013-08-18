@@ -23,10 +23,25 @@
     }
   };
   app.store.mock = {
-    //根据id取mock,如果省略参数,则取所有mock;
+    /**
+     * @name getMock
+     * @function
+     *
+     * @description 根据id取mock.
+     * @param {string} id mockid,如果省略参数,则取所有mock.
+     * @returns {Object} 单个mock对象或者mock集合对象.
+     */
     getMock: function (id) {
       return id ? mocks[id] : mocks;
     },
+    /**
+     * @name updateMock
+     * @function
+     *
+     * @description 保存mock.
+     * @param {Object} mock 要保存的mock对象,根据是否有id来判断是新建还是修改.
+     * @returns {Object} 执行结果.
+     */
     updateMock: function (mock) {
       var oldMock = mocks[mock.id], result;
       delete mock.cls;
@@ -47,6 +62,14 @@
       }
       return result;
     },
+    /**
+     * @name getCurrentMock
+     * @function
+     *
+     * @description 获取或者设置当前mock.
+     * @param {string} id mockid,如果省略参数,则取当前mock,否则为设置当前mock.
+     * @returns {Object} 单个mock对象或者mock集合对象.
+     */
     getCurrentMock: function (id) {
       if (id) {
         currentMock = mocks[id];
@@ -60,20 +83,52 @@
       currentMock.cls = 'active';
       return currentMock;;
     },
+    /**
+     * @name delMock
+     * @function
+     *
+     * @description 删除mock.
+     * @param {string} id mockid,参数不可省略.
+     * @returns {Object} 执行结果.
+     */
     delMock: function (id) {
       var result = nm.mocks.delMock(id);
       result.success && delete mocks[id];
       return result;
     },
+    /**
+     * @name run
+     * @function
+     *
+     * @description 运行mock服务器.
+     * @param {string} id mockid,要运行的mockid.
+     * @returns {undefined} 要获取运行结果,请监听netmock的start事件.
+     */
     run: function (mockId) {
       mocks[mockId].runningStatus = 'running';
     },
+    /**
+     * @name stop
+     * @function
+     *
+     * @description 停止当前正在运行的mock服务器.
+     * @returns {undefined} 要获取运行状态,请监听netmock的stop事件.
+     */
     stop: function () {
       mocks[mockId].runningStatus = 'stop';
     }
   };
 
   app.store.route = {
+    /**
+     * @name getRoute
+     * @function
+     *
+     * @description 获取指定的route.
+     * @param {string} mockId route所属的mock的id,不可生路.
+     * @param {string} routeId 如果省略,则取出指定mock的所有route.
+     * @returns {Object} 单个mock对象或者mock集合对象.
+     */
     getRoute: function (mockId, routeId) {
       var routes = nm.mocks.getRoutes(mockId);
       if (routeId) {
@@ -81,19 +136,51 @@
       }
       return routes;
     },
+    /**
+     * @name updateRoute
+     * @function
+     *
+     * @description 保存route
+     * @param {Object} route 要保存的route对象
+     * @returns {Object} 运行结果.
+     */
     updateRoute: function (route) {
       delete route.$$hashKey;
       return nm.mocks.updateRoute(route);
     },
-    delRoute: function (mockId, id) {
+    /**
+     * @name delRoute
+     * @function
+     *
+     * @description 删除指定的route
+     * @param {string} mockId 要删除的route所属的mock的id,不可省略
+     * @param {string} routeId 要删除的routeId,不可生路
+     * @returns {Object} 执行结果
+     */
+    delRoute: function (mockId, routeId) {
       return nm.mocks.delRoute(mockId, id);
     }
   };
 
   app.store.systemSetting = {
+    /**
+     * @name getSystemSetting
+     * @function
+     *
+     * @description 获取软件的设置.
+     * @returns {Object} 软件的设置对象.
+     */
     getSystemSetting: function () {
       return nm.getSystemSetting();
     },
+    /**
+     * @name update
+     * @function
+     *
+     * @description 保存系统设置.
+     * @param {ss} ss 系统设置对象.
+     * @returns {Object} 保存结果.
+     */
     update: function (ss) {
       return nm.saveSystemSetting(ss)
     }
@@ -107,7 +194,6 @@
  * @returns undefined
  */
   app.onFileDrag = function () {
-    //拖动文件
     window.ondragover = function (e) { e.preventDefault(); return false; };
     window.ondrop = function (e) { e.preventDefault(); return false; };
     //拖动文件
@@ -119,7 +205,7 @@
       //返回值
       path = e.dataTransfer.files[0].path;
       route.responseData = path;
-      //根据后缀名判断类型
+      //根据后缀名判断默认contentType
       if (~path.indexOf('.js')) {
         route.contentType = 'application/x-javascript';
       }
@@ -144,18 +230,18 @@
       else {
         route.contentType = 'application/x-msdownload';
       }
-      //路由名
+      //route.path默认为文件名
       pathArr = path.split('\\');
       if (pathArr.length) {
         filename = pathArr[pathArr.length - 1];
         route.path = '/' + filename;
       }
-      console.log(route);
       window.dragToAddRoute = route;
       window.location.href = '#/mocks/updateroute/' + mock.id + '/';
     };
   };
 })(this);
+
 
 $(function () {
   $('.navbar .nav li').on('click', function () {
@@ -168,6 +254,7 @@ angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controller
   .config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/mocks/");
     $stateProvider
+      //系统设置
       .state('system', {
         url: '/system',
         templateUrl: 'partials/system.html',
@@ -207,6 +294,7 @@ angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controller
           }
         }
       })
+      //更新路由,如果没有指定id,则为新建
       .state('mocks.updateroute', {
         url: "/updateroute/{mockid}/{id}",
         controller: 'UpdateRoute',
@@ -214,4 +302,5 @@ angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controller
       });
   });
 
+//监听文件拖动
 app.onFileDrag();

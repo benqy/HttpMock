@@ -7,6 +7,7 @@ angular.module('httpmock.controllers', [])
   .controller('CurrentMock', function ($scope, $stateParams, $state) {
     var  currentMock = app.store.mock.getCurrentMock($stateParams.id), routes;
     routes = currentMock ? nm.mocks.getRoutes(currentMock.id) : undefined;
+    //没有任何mock就跳转到mock列表
     if (!currentMock || !currentMock.id) {
       $state.transitionTo('mocks');
       return;
@@ -23,6 +24,7 @@ angular.module('httpmock.controllers', [])
     $scope.hideCustomHeaders = function (e) {
       $(e.target).next('div').hide();
     };
+
     $scope.delRoute = function (route) {
       if (confirm('确认删除路径  ' + route.path)) {
         if (app.store.route.delRoute(route.mockId, route.id).success) {
@@ -37,6 +39,7 @@ angular.module('httpmock.controllers', [])
         }
       }
     };
+
     $scope.runServer = function (mock) {
       app.store.mock.run(mock.id)
     }
@@ -65,15 +68,21 @@ angular.module('httpmock.controllers', [])
       route = window.dragToAddRoute;
       window.dragToAddRoute = undefined;
     }
+    //http状态码和contentType选择列表
     $scope.statusCodes = app.STATUS_CODE;
     $scope.contentTypes = app.CONTENT_TYPE;
+
+    //如果有指定id,则用指定的route替换掉默认值
     $stateParams.id && (route = app.store.route.getRoute(currentMock.id, $stateParams.id));
+    //使用clone的副本与表单绑定,只有保存成功才会实际更新
     $scope.route = angular.copy(route);
     
+    //如果没有customHeader,则默认创建一个空的.
     $scope.route.customHeaders = $scope.route.customHeaders || [];
     if (!$scope.route.customHeaders[0]) {
       $scope.route.customHeaders.push({ name: '', value: '' });
     }
+
     $scope.update = function (formRoute) {
       formRoute.mockId = currentMock.id;
       var result = app.store.route.updateRoute(formRoute);
@@ -84,10 +93,13 @@ angular.module('httpmock.controllers', [])
         $scope.errorMsg = result.msg;
       }
     };
-    $scope.addCustomType = function () {
+
+    $scope.addCustomHeader = function () {
       $scope.route.customHeaders = $scope.route.customHeaders || [];
       $scope.route.customHeaders.push({ name: '', value: '' });
     };
+
+    //切换responseData提示的显示和隐藏.
     $scope.showHelp = function (e) {
       var $target = $(e.target);
       if (0 !== parseInt($target.text())) {
@@ -105,6 +117,7 @@ angular.module('httpmock.controllers', [])
       $scope.systemSetting.globalHeaders.push({ name: '', value: '' });
     };
     $scope.update = function (systemSetting) {
+      //如果没有指定保存的路径,则使用用户文件夹作为默认值
       if (!systemSetting.storeDir) {
         systemSetting.storeDir = require('nw.gui').App.dataPath[0];
       }

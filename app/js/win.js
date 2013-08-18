@@ -1,5 +1,6 @@
 ﻿var nm = require('./netmock'), gui = require('nw.gui');
 
+//将保存路径切换到系统设置里的路径
 var userAppPath = gui.App.dataPath;
 nm.setSystemSettingFile(gui.App.dataPath + '/systemsetting.json');
 var ss = nm.getSystemSetting(), userAppPath = ss.storeDir || gui.App.dataPath;
