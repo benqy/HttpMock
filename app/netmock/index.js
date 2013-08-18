@@ -11,8 +11,14 @@
 
 //查找指定的路径是否匹配当前运行的mock中的路由.
 var matchRoute = function (path) {
+  var route;
   if (!runningRoutes) return;
-  var route = runningRoutes[path];
+  for (var key in runningRoutes) {
+    if (runningRoutes[key].path === path) {
+      route = runningRoutes[key];
+      break;
+    }
+  }
   if (route) return route;
   if (path.charAt(path.length - 1) == '/') {
     path = path.slice(0, path.length - 1);
@@ -85,7 +91,7 @@ var noErrorDecodeUri = function (url) {
   }
 }
 
-//代理服务器
+//运行代理服务器
 var proxyServer = httpProxy.createServer(function (req, res, proxy) {
   req.reqDate = new Date();
   var buffer = httpProxy.buffer(req);
@@ -122,6 +128,7 @@ var proxyServer = httpProxy.createServer(function (req, res, proxy) {
   }
 });
 
+//检查html内容是否为gbk编码
 var checkGbk = function (ct, buffer) {
   var ct = ct || '', contentStr = buffer.toString();
   if (~ct.toLowerCase().indexOf('gbk') || ~ct.toLowerCase().indexOf('gb2312')
@@ -313,17 +320,17 @@ var runServer = function () {
   });
   currentServer.on('error', function (e) {
     if (e.code == 'EACCES') {
-      isRunning = SERVER_STATUS.closed;
-      module.exports.fire('serverClose', { msg: '服务器关闭..' });
       module.exports.fire('error', { msg: '端口被占用' });
     }
     else {
       module.exports.fire('error', { msg: '异常了,重启吧..' });
     }
+    isRunning = SERVER_STATUS.closed;
+    module.exports.fire('serverStatusChange', { status: SERVER_STATUS.closed });
   });
   currentServer.listen(runningMock.port);
   isRunning = SERVER_STATUS.running;
-  module.exports.fire('serverStart', { msg: '服务器启动..' });
+  module.exports.fire('serverStatusChange', { status: SERVER_STATUS.running, mock: runningMock });
 };
 
 
@@ -379,8 +386,8 @@ module.exports = {
   },
   host: host,
   mocks: mocks,
-  start: function (mockName) {
-    var mock = mocks.getMocks()[mockName];
+  start: function (mockId) {
+    var mock = mocks.getMocks()[mockId];
     if (!mock) return;
     if (mock.mockType == 1) {
       host.disProxy();
@@ -390,19 +397,22 @@ module.exports = {
       host.removeHost('127.0.0.1', mock.name);
       host.setProxy();
     }
+    isRunning = SERVER_STATUS.operating;
+    module.exports.fire('serverStatusChange', { status: SERVER_STATUS.operating });
     module.exports.fire('msg', { msg: '如果mock类型为代理,并且代理未生效,请重启IE浏览器或手动设置' });
     runningMock = mock;
-    runningRoutes = mocks.getRoutes(mockName);
+    runningRoutes = mocks.getRoutes(mockId);
     this.runServer();
   },
+  //刷新当前运行的route的数据
   updateCurrentRoute: function () {
     if (runningMock) {
-      runningRoutes = mocks.getRoutes(runningMock.name);
+      runningRoutes = mocks.getRoutes(runningMock.id);
     }
   },
   stop: function () {
-    //mockName && host.removeHost('127.0.0.1', mockName);
     isRunning = SERVER_STATUS.operating;
+    module.exports.fire('serverStatusChange', { status: SERVER_STATUS.operating });
     currentServer && currentServer.address() && currentServer.close(function () {
       host.disProxy();
       runningMock && host.removeHost('127.0.0.1', runningMock.name);
@@ -410,7 +420,7 @@ module.exports = {
       runningRoutes = undefined;
       currentServer = null;
       isRunning = SERVER_STATUS.closed;
-      module.exports.fire('serverClose', { msg: '服务器关闭..' });
+      module.exports.fire('serverStatusChange', { status: SERVER_STATUS.closed });
     });
     module.exports.fire('msg', { msg: '浏览器代理已关闭,如果未生效,请手动设置' });
   },

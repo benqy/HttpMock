@@ -3,6 +3,7 @@
 angular.module('httpmock.controllers', [])
   .controller('Mocks', function ($scope) {
     $scope.mocks = app.store.mock.getMock();
+    $scope.serverStatus = app.store.mock.getServerStatus();
   })
   .controller('CurrentMock', function ($scope, $stateParams, $state) {
     var  currentMock = app.store.mock.getCurrentMock($stateParams.id), routes;
@@ -25,6 +26,9 @@ angular.module('httpmock.controllers', [])
       $(e.target).next('div').hide();
     };
 
+    $scope.openRoute = function (route) {
+      gui.Shell.openExternal('http://' + currentMock.name + (currentMock.port == 80 ? '' : ':' + currentMock.port) + route.path);
+    };
     $scope.delRoute = function (route) {
       if (confirm('确认删除路径  ' + route.path)) {
         if (app.store.route.delRoute(route.mockId, route.id).success) {
@@ -39,10 +43,14 @@ angular.module('httpmock.controllers', [])
         }
       }
     };
-
+    //服务器操作
+    $scope.serverStatus = app.store.mock.getServerStatus();
     $scope.runServer = function (mock) {
-      app.store.mock.run(mock.id)
-    }
+      app.store.mock.run(mock.id);
+    };
+    $scope.stopServer = function () {
+      app.store.mock.stop();
+    };
   })
   .controller('UpdateMock', function ($scope, $stateParams, $state) {
     var mock = new app.model.Mock();

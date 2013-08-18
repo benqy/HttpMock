@@ -1,6 +1,16 @@
 ﻿'use strict';
 (function (global) {
   var nm = require('./netmock'), mocks = nm.mocks.getMocks(), app, currentMock;
+  //http服务器运行状态
+  var SERVER_STATUS = {
+    running: 'running',
+    operating: 'operating',
+    closed: 'closed'
+  },//当前http服务器状态
+    serverStatus = {
+    status: SERVER_STATUS.closed,
+    mock: null
+  };
   app = global.app = {
     store: {},
     model: {
@@ -22,6 +32,7 @@
       }
     }
   };
+
   app.store.mock = {
     /**
      * @name getMock
@@ -67,12 +78,12 @@
      * @function
      *
      * @description 获取或者设置当前mock.
-     * @param {string} id mockid,如果省略参数,则取当前mock,否则为设置当前mock.
+     * @param {string} mockId mockid,如果省略参数,则取当前mock,否则为设置当前mock.
      * @returns {Object} 单个mock对象或者mock集合对象.
      */
-    getCurrentMock: function (id) {
-      if (id) {
-        currentMock = mocks[id];
+    getCurrentMock: function (mockId) {
+      if (mockId) {
+        currentMock = mocks[mockId];
       }
       else if (!currentMock) {
         for (var key in mocks) {
@@ -101,11 +112,11 @@
      * @function
      *
      * @description 运行mock服务器.
-     * @param {string} id mockid,要运行的mockid.
+     * @param {string} mockId 要运行的mock的id.
      * @returns {undefined} 要获取运行结果,请监听netmock的start事件.
      */
     run: function (mockId) {
-      mocks[mockId].runningStatus = 'running';
+      nm.start(mockId);
     },
     /**
      * @name stop
@@ -115,9 +126,37 @@
      * @returns {undefined} 要获取运行状态,请监听netmock的stop事件.
      */
     stop: function () {
-      mocks[mockId].runningStatus = 'stop';
+      nm.stop();
+    },
+    /**
+     * @name getServerStatus
+     * @function
+     *
+     * @description 获取服务器运行状态.
+     * @returns {Object} 服务器状态对象.
+     */
+    getServerStatus: function () {
+      return serverStatus;
     }
   };
+
+  //TODO 这里需要优化实现方式,现在丑爆了,等对angular再熟悉点再说.
+  nm.on('serverStatusChange', function (data) {
+    if (data.mock) {
+      serverStatus.mock = mocks[data.mock.id];
+    }
+    serverStatus.status = data.status;
+    //异步的,要手动执行数据检测,但是start方法可能是异步也可能是同步,如果是同步则报异常
+    try{
+      $('#startServer').scope().$digest();
+      $('#operationServer').scope().$digest();
+      $('#stopServer').scope().$digest();
+      $('#mocklist').scope().$digest();
+    }
+    catch (e) {
+      console.log(e);
+    }
+  });
 
   app.store.route = {
     /**
@@ -145,8 +184,11 @@
      * @returns {Object} 运行结果.
      */
     updateRoute: function (route) {
+      var result;
       delete route.$$hashKey;
-      return nm.mocks.updateRoute(route);
+      result = nm.mocks.updateRoute(route);
+      result.success && nm.updateCurrentRoute();
+      return result;
     },
     /**
      * @name delRoute
@@ -187,13 +229,13 @@
   };
 
   /**
- * @name onFileDrag
- * @function
- *
- * @description 响应window的文件拖放事件,根据拖放的文件创建mock
- * @returns undefined
- */
-  app.onFileDrag = function () {
+   * @name listenFileDrag
+   * @function
+   *
+   * @description 响应window的文件拖放事件,根据拖放的文件创建mock
+   * @returns undefined
+   */
+  app.listenFileDrag = function () {
     window.ondragover = function (e) { e.preventDefault(); return false; };
     window.ondrop = function (e) { e.preventDefault(); return false; };
     //拖动文件
@@ -303,4 +345,4 @@ angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controller
   });
 
 //监听文件拖动
-app.onFileDrag();
+app.listenFileDrag();
