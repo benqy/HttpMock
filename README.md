@@ -91,4 +91,27 @@ v0.1.0beta
 
 *  配置测试数据:运行软件,在系统设置里将"存档文件夹"设置为test目录下的testData.
 *  设置软件启动页:关闭软件,在app里的package.json里,将main值设置为testrunner.html.
-*  运行软件即可看到测试结果
+*  运行软件即可看到测试结果  
+
+
+## License
+[WTFPL公共许可证](http://www.wtfpl.net/)
+
+```
+( WTFPL )
+
+除了第三方模块遵循原协议外.其他的爱干啥干啥,爱咋整咋整,赏脸的注明出处,不写也无所谓.  
+
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                   Version 2, December 2004  
+
+Copyright (C) 2013 benqy <hmjlr123@gmail.com>  
+
+Everyone is permitted to copy and distribute verbatim or modified
+copies of this license document, and changing it is allowed as long
+as the name is changed.
+
+           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+```
