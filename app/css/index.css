@@ -81,11 +81,11 @@ body {
 }
 .sidebar {
     padding: 0 15px 0 15px;
-    width: 180px;
+    width: 200px;
 }
 
 .container-right {
-    width: calc(100% - 211px);
+    width: calc(100% - 230px);
     overflow: auto;
     height:100%;
 }

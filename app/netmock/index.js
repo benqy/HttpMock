@@ -253,7 +253,7 @@ var runServer = function () {
         }
       }
     }
-      //静态文件夹的子目录(文件)路由
+    //静态文件夹的子目录(文件)路由
     else if ((route = checkStaticDir(urlOpt.pathname).route)) {
       //根据后缀名设置content-type
       if (!filename) {
@@ -329,6 +329,7 @@ var runServer = function () {
     module.exports.fire('serverStatusChange', { status: SERVER_STATUS.closed });
   });
   currentServer.listen(runningMock.port);
+  currentServer.timeout = 12000;
   isRunning = SERVER_STATUS.running;
   module.exports.fire('serverStatusChange', { status: SERVER_STATUS.running, mock: runningMock });
 };

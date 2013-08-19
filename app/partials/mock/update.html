@@ -1,12 +1,12 @@
 ﻿<div>
     <h3>{{title}}</h3>
-    <form name="mockForm" class="form-horizontal">
+    <form name="mockForm" class="form-horizontal" ng-submit="update(mock)">
         <div class="control-group" ng-class="{error:mockForm.name.$error.required || mockForm.name.$error.pattern}">
             <label class="control-label">域名</label>
             <div class="controls">
-                <input type="text" name="name" placeholder="域名" ng-model="mock.name" required ng-pattern="/^[a-z1-9\.]*$/">
+                <input type="text" name="name"  placeholder="域名" ng-model="mock.name" required ng-pattern="/^[a-z1-9\.\-_]*$/">
                 <span class="help-inline" ng-show="mockForm.name.$error.required">域名不能为空</span>
-                <span class="help-inline" ng-show="mockForm.name.$error.pattern">域名只能使用字母数字和"."</span>
+                <span class="help-inline" ng-show="mockForm.name.$error.pattern">域名只能使用字母数字_-和"."</span>
             </div>
         </div>
         <div class="control-group" ng-class="{error:mockForm.port.$error.required || mockForm.port.$error.pattern || mockForm.port.$error.min || mockForm.port.$error.max}">
@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary" ng-disabled="mockForm.$invalid" ng-click="update(mock)">保存</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="mockForm.$invalid">保存</button>
             <span class="error-msg" ng-show="errorMsg">{{errorMsg}}</span>
         </div>
     </form>

@@ -9,12 +9,12 @@
 <body>
     <div class="navbar navbar-fixed-top" style="-webkit-app-region: drag;">
         <div class="navbar-inner">
-            <img src="img/logo.png" alt="">
+            <img src="img/logo.png">
             <a class="brand" href="javascript://">HTTPMOCK</a>
-            <ul class="nav">
-                <li class="active"><a href="#/mocks/">Mock列表</a></li>
-                <li><a href="#/system">系统设置</a></li>
-                <li><a href="#/log">Http日记</a></li>
+            <ul class="nav" id="navlist">
+                <li class="mocks"><a href="#/mocks/">Mock列表</a></li>
+                <li class="system"><a href="#/system">系统设置</a></li>
+                <li class="log"><a href="#/log">Http日记</a></li>
             </ul>
             <div class="btn-group window-tool">
                 <a class="btn rectbtn" href="javascript://" id="needHelp" title="当前版本v0.1.4.1beta"><i class="icon-question-sign"></i></a>
@@ -26,7 +26,11 @@
     </div>
     <div class="container-fluid" ui-view ng-animate="'view'">
     </div>
-    <div id="mainModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="mainModalLabel" aria-hidden="true" ui-view="modalView">
+    <div class="alert showmsg alert-success" id="showmsg">
+        <button type="button" class="close">×</button>
+        <strong id="showMsgTitle"></strong>
+        <span></span>
+        <a class="btn" id="nextHelp" href="javascript://">NEXT</a>
     </div>
 
     <script src="lib/jquery-2.0.3.js"></script>
@@ -35,6 +39,7 @@
     <script src="lib/angular/angular-ui-router.js"></script>
     <script src="js/win.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/help.js"></script>
     <script src="js/data.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/filters.js"></script>

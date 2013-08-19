@@ -28,7 +28,7 @@ var updateMock = function (data) {
   if (~data.name.indexOf('://')) {
     data.name = require('url').parse(data.name, true).host || data.name;
   }
-  if (!/^[a-z1-9\.]*$/.test(data.name)) return { success: false, msg: '域名格式错误' };
+  if (!/^[a-z1-9\.\-_]*$/.test(data.name)) return { success: false, msg: '域名格式错误' };
   if (isNaN(data.port)) return { success: false, msg: '必须指定正确的端口' };
 
   mocks = getMocks();

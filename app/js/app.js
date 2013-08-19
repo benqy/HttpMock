@@ -82,7 +82,10 @@
      * @returns {Object} 单个mock对象或者mock集合对象.
      */
     getCurrentMock: function (mockId) {
-      if (mockId) {
+      if (mocks.length) {
+        currentMock = null;
+      }
+      else if (mockId) {
         currentMock = mocks[mockId];
       }
       else if (!currentMock) {
@@ -91,7 +94,13 @@
           break;
         }
       }
-      currentMock.cls = 'active';
+      if (currentMock) {
+        for (var key in mocks) {
+          mocks[key].cls=undefined;
+        }
+        currentMock.cls = 'active';
+      }
+
       return currentMock;;
     },
     /**
@@ -105,6 +114,7 @@
     delMock: function (id) {
       var result = nm.mocks.delMock(id);
       result.success && delete mocks[id];
+      currentMock = null;
       return result;
     },
     /**
@@ -203,7 +213,7 @@
      * @returns {Object} 执行结果
      */
     delRoute: function (mockId, routeId) {
-      return nm.mocks.delRoute(mockId, id);
+      return nm.mocks.delRoute(mockId, routeId);
     }
   };
 
@@ -285,66 +295,110 @@
       window.location.href = '#/mocks/updateroute/' + mock.id + '/';
     };
   };
-})(this);
 
-
-$(function () {
-  $('.navbar .nav li').on('click', function () {
-    $('.navbar .nav li').removeClass('active');
-    $(this).addClass('active');
+  /**
+   * @name showMsg
+   * @function
+   *
+   * @description 显示一条消息.
+   * @param {string} txt 要显示的消息文本.
+   * @param {string} title 要显示的消息标题,5个字以内
+   * @param {string} type 消息的类型(app.showMsg.TYPES)
+   * @param {string} 是否显示下一条消息按钮
+   * @returns {undefined} .
+   */
+  app.showMsg = function (txt, title, type, btn) {
+    var el = $('#showmsg'), titleEl = $('#showMsgTitle');
+    el.find('span').text(txt);
+    title = title || '提示!';
+    type = type || app.showMsg.TYPES.tip;
+    el.removeClass('alert-error').removeClass('alert-success').removeClass('alert-info').addClass(type)
+    titleEl.text(title);
+    if (!btn) {
+      $('#nextHelp').hide();
+    }
+    el.show();
+  };
+  $('#showmsg .close').on('click', function () {
+    $('#showmsg').hide();
   });
-});
+  app.showMsg.TYPES = {
+    error: 'alert-error',
+    tip: 'alert-success',
+    info: 'alert-info'
+  };
+  nm.on('msg', function (data) {
+    app.showMsg(data.msg);
+  });
+  nm.on('error', function (data) {
+    app.showMsg(data.msg, '错误!', app.showMsg.TYPES.error);
+  });
+
+
+  //导航栏
+  app.store.nav = {
+    NAVLIST:{
+      mocks: 'mocks',
+      system: 'system',
+      log:'log'
+    },
+    changeStatus: function (state) {
+      var $navList = $('#navlist');
+      $navList.find('li').removeClass('active');
+      $navList.find('li.' + state).addClass('active')
+    }
+  };
+})(this);
 
 angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controllers'])
   .config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/mocks/");
     $stateProvider
-      //系统设置
-      .state('system', {
-        url: '/system',
-        templateUrl: 'partials/system.html',
-        controller: 'System'
-      })
       //mock列表
       .state('mocks', {
         url: "/mocks",
         templateUrl: "partials/mock/list.html",
-        controller: 'Mocks'
+        controller: 'Mocks',
+        onEnter: function () {
+          app.store.nav.changeStatus(app.store.nav.NAVLIST.mocks);
+        }
       })
       //当前选中的mock
       .state('mocks.currentmock', {
         url: "/{id}",
         templateUrl: "partials/mock/detail.html",
-        controller: 'CurrentMock',
-        onExit: function () {
-          var mocks = app.store.mock.getMock();
-          if (!mocks) return;
-          //标志当前选中项
-          for (var key in mocks) {
-            mocks[key].cls && (mocks[key].cls = undefined)
-          }
-        }
+        controller: 'CurrentMock'
       })
       //更新mock,如果没有指定id,则为新建
       .state('mocks.updatemock', {
         url: "/update/{id}",
         controller: 'UpdateMock',
-        templateUrl: "partials/mock/update.html",
-        onExit: function () {
-          var mocks = app.store.mock.getMock();
-          if (!mocks) return;
-          //标志当前选中项
-          for (var key in mocks) {
-            mocks[key].cls && (mocks[key].cls = undefined)
-          }
-        }
+        templateUrl: "partials/mock/update.html"
       })
       //更新路由,如果没有指定id,则为新建
       .state('mocks.updateroute', {
         url: "/updateroute/{mockid}/{id}",
         controller: 'UpdateRoute',
         templateUrl: "partials/mock/updateroute.html"
-      });
+      })
+      //系统设置
+      .state('system', {
+        url: '/system',
+        templateUrl: 'partials/system.html',
+        controller: 'System',
+        onEnter: function () {
+          app.store.nav.changeStatus(app.store.nav.NAVLIST.system);
+        }
+      })
+      //日记模块
+      .state('log', {
+        url: '/log',
+        templateUrl: 'partials/log.html',
+        controller: 'Log',
+        onEnter: function () {
+          app.store.nav.changeStatus(app.store.nav.NAVLIST.log);
+        }
+      })
   });
 
 //监听文件拖动

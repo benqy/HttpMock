@@ -6,7 +6,7 @@ angular.module('httpmock.controllers', [])
     $scope.serverStatus = app.store.mock.getServerStatus();
   })
   .controller('CurrentMock', function ($scope, $stateParams, $state) {
-    var  currentMock = app.store.mock.getCurrentMock($stateParams.id), routes;
+    var currentMock = app.store.mock.getCurrentMock($stateParams.id), routes;
     routes = currentMock ? nm.mocks.getRoutes(currentMock.id) : undefined;
     //没有任何mock就跳转到mock列表
     if (!currentMock || !currentMock.id) {
@@ -18,7 +18,7 @@ angular.module('httpmock.controllers', [])
     //显示鼠标鼠标指向的route的自定义header
     $scope.showCustomHeaders = function (e) {
       var $target = $(e.target);
-      if(0 !== parseInt($target.text())){
+      if (0 !== parseInt($target.text())) {
         $target.next('div').show();
       }
     };
@@ -72,19 +72,24 @@ angular.module('httpmock.controllers', [])
   })
   .controller('UpdateRoute', function ($scope, $stateParams, $state) {
     var currentMock = app.store.mock.getCurrentMock($stateParams.mockid), route = new app.model.Route($stateParams.mockid);
+    //如果是拖动文件触发的updateroute,则使用文件对应的route对象作为默认值
     if (window.dragToAddRoute) {
       route = window.dragToAddRoute;
       window.dragToAddRoute = undefined;
     }
+
+
     //http状态码和contentType选择列表
     $scope.statusCodes = app.STATUS_CODE;
     $scope.contentTypes = app.CONTENT_TYPE;
 
     //如果有指定id,则用指定的route替换掉默认值
     $stateParams.id && (route = app.store.route.getRoute(currentMock.id, $stateParams.id));
+    $scope.title = $stateParams.id ? '编辑Route:' + route.name : '新建Route';
+
     //使用clone的副本与表单绑定,只有保存成功才会实际更新
     $scope.route = angular.copy(route);
-    
+
     //如果没有customHeader,则默认创建一个空的.
     $scope.route.customHeaders = $scope.route.customHeaders || [];
     if (!$scope.route.customHeaders[0]) {
@@ -137,4 +142,7 @@ angular.module('httpmock.controllers', [])
         $scope.errorMsg = result.msg;
       }
     };
+  })
+  .controller('Log', function ($scope) {
+
   });
