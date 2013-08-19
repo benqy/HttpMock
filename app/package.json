@@ -1,6 +1,6 @@
 {
   "name": "HTTPMOCK",
-  "main": "index.html",
+  "main": "testrunner.html",
   "window": {
     "title": "HttpMock",
     "icon": "img/logo.png",
