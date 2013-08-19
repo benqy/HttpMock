@@ -100,7 +100,7 @@ v0.1.0beta
 ```
 ( WTFPL )
 
-除了第三方模块遵循原协议外.其他的爱干啥干啥,爱咋整咋整,赏脸的注明出处,不写也无所谓.  
+除了第三方模块遵循原协议外.其他的爱干啥干啥,爱咋整咋整.  
 
 DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
                    Version 2, December 2004  
