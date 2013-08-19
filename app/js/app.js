@@ -43,6 +43,17 @@
      * @returns {Object} 单个mock对象或者mock集合对象.
      */
     getMock: function (id) {
+      //var result;
+      //if (id) {
+      //  result = mocks[id];
+      //}
+      //else {
+      //  result = [];
+      //  for (var key in mocks) {
+      //    result.push(mocks[key]);
+      //  }
+      //}
+      //return result;
       return id ? mocks[id] : mocks;
     },
     /**
@@ -96,9 +107,9 @@
       }
       if (currentMock) {
         for (var key in mocks) {
-          mocks[key].cls=undefined;
+          mocks[key].isCurrent=undefined;
         }
-        currentMock.cls = 'active';
+        currentMock.isCurrent = true;
       }
 
       return currentMock;;

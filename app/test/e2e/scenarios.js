@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 /* http://docs.angularjs.org/guide/dev_guide.e2e-testing */
 
@@ -8,8 +8,8 @@ describe('HttpMock', function () {
       browser().navigateTo('index.html');
     });
 
-    it('should be possible to control phone order via the drop down select box', function () {
-      pause();
+    it('列表正常显示', function () {
+      expect(repeater('.nav-list li').count()).toBe(3)
     });
   });
 });
