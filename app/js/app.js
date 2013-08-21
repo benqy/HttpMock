@@ -8,9 +8,9 @@
     closed: 'closed'
   },//当前http服务器状态
     serverStatus = {
-    status: SERVER_STATUS.closed,
-    mock: null
-  };
+      status: SERVER_STATUS.closed,
+      mock: null
+    };
   app = global.app = {
     store: {},
     model: {
@@ -107,7 +107,7 @@
       }
       if (currentMock) {
         for (var key in mocks) {
-          mocks[key].isCurrent=undefined;
+          mocks[key].isCurrent = undefined;
         }
         currentMock.isCurrent = true;
       }
@@ -171,7 +171,7 @@
     }
     serverStatus.status = data.status;
     //异步的,要手动执行数据检测,但是start方法可能是异步也可能是同步,如果是同步则报异常
-    try{
+    try {
       $('#startServer').scope().$digest();
       $('#operationServer').scope().$digest();
       $('#stopServer').scope().$digest();
@@ -348,10 +348,10 @@
 
   //导航栏
   app.store.nav = {
-    NAVLIST:{
+    NAVLIST: {
       mocks: 'mocks',
       system: 'system',
-      log:'log'
+      log: 'log'
     },
     changeStatus: function (state) {
       var $navList = $('#navlist');
@@ -361,56 +361,56 @@
   };
 })(this);
 
-angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controllers'])
-  .config(function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise("/mocks/");
-    $stateProvider
-      //mock列表
-      .state('mocks', {
-        url: "/mocks",
-        templateUrl: "partials/mock/list.html",
-        controller: 'Mocks',
-        onEnter: function () {
-          app.store.nav.changeStatus(app.store.nav.NAVLIST.mocks);
-        }
-      })
-      //当前选中的mock
-      .state('mocks.currentmock', {
-        url: "/{id}",
-        templateUrl: "partials/mock/detail.html",
-        controller: 'CurrentMock'
-      })
-      //更新mock,如果没有指定id,则为新建
-      .state('mocks.updatemock', {
-        url: "/update/{id}",
-        controller: 'UpdateMock',
-        templateUrl: "partials/mock/update.html"
-      })
-      //更新路由,如果没有指定id,则为新建
-      .state('mocks.updateroute', {
-        url: "/updateroute/{mockid}/{id}",
-        controller: 'UpdateRoute',
-        templateUrl: "partials/mock/updateroute.html"
-      })
-      //系统设置
-      .state('system', {
-        url: '/system',
-        templateUrl: 'partials/system.html',
-        controller: 'System',
-        onEnter: function () {
-          app.store.nav.changeStatus(app.store.nav.NAVLIST.system);
-        }
-      })
-      //日记模块
-      .state('log', {
-        url: '/log',
-        templateUrl: 'partials/log.html',
-        controller: 'Log',
-        onEnter: function () {
-          app.store.nav.changeStatus(app.store.nav.NAVLIST.log);
-        }
-      })
-  });
+var httpmock = angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controllers']);
+httpmock.config(function ($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise("/mocks/");
+  $stateProvider
+    //mock列表
+    .state('mocks', {
+      url: "/mocks",
+      templateUrl: "partials/mock/list.html",
+      controller: 'Mocks',
+      onEnter: function () {
+        app.store.nav.changeStatus(app.store.nav.NAVLIST.mocks);
+      }
+    })
+    //当前选中的mock
+    .state('mocks.currentmock', {
+      url: "/{id}",
+      templateUrl: "partials/mock/detail.html",
+      controller: 'CurrentMock'
+    })
+    //更新mock,如果没有指定id,则为新建
+    .state('mocks.updatemock', {
+      url: "/update/{id}",
+      controller: 'UpdateMock',
+      templateUrl: "partials/mock/update.html"
+    })
+    //更新路由,如果没有指定id,则为新建
+    .state('mocks.updateroute', {
+      url: "/updateroute/{mockid}/{id}",
+      controller: 'UpdateRoute',
+      templateUrl: "partials/mock/updateroute.html"
+    })
+    //系统设置
+    .state('system', {
+      url: '/system',
+      templateUrl: 'partials/system.html',
+      controller: 'System',
+      onEnter: function () {
+        app.store.nav.changeStatus(app.store.nav.NAVLIST.system);
+      }
+    })
+    //日记模块
+    .state('log', {
+      url: '/log',
+      templateUrl: 'partials/log.html',
+      controller: 'Log',
+      onEnter: function () {
+        app.store.nav.changeStatus(app.store.nav.NAVLIST.log);
+      }
+    })
+});
 
 //监听文件拖动
 app.listenFileDrag();

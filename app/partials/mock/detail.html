@@ -28,7 +28,7 @@
         <a title="运行中,点击关闭服务器" id="stopServer"  style="display:none;margin-left: 0;border-top-left-radius: 4px;border-bottom-left-radius: 4px;" class="btn btn-success" ng-show="serverStatus.status=='running'&&serverStatus.mock&&serverStatus.mock.id==currentMock.id" ng-click="stopServer()">
             <i class="icon-white icon-stop"></i>
         </a>
-        <a title="编辑Mock" class="btn btn-info" href="#/mocks/update/{{currentMock.id}}"><i class="icon-edit  icon-white"></i></a>
+        <a title="编辑Mock" class="btn btn-info" markfortest="mockedit" href="#/mocks/update/{{currentMock.id}}"><i class="icon-edit  icon-white"></i></a>
         <a title="删除Mock"  ng-click="delMock(currentMock)" class="btn btn-info"><i class="icon-trash  icon-white"></i></a>
         <a title="添加新的路由" class="btn btn-info" href="#/mocks/updateroute/{{currentMock.id}}/"><i class="icon-plus  icon-white"></i></a>
     </div>

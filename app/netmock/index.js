@@ -334,7 +334,6 @@ var runServer = function () {
   module.exports.fire('serverStatusChange', { status: SERVER_STATUS.running, mock: runningMock });
 };
 
-
 module.exports = {
   resDataType: {
     text: 'text',

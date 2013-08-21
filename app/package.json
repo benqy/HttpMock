@@ -5,7 +5,7 @@
     "title": "HttpMock",
     "icon": "img/logo.png",
     "toolbar": true,
-    "frame": false,
+    "frame": true,
     "width": 1200,
     "height": 700,
     "position": "center",

@@ -1,7 +1,19 @@
 ﻿'use strict';
 
-/* http://docs.angularjs.org/guide/dev_guide.e2e-testing */
+var fs = require('fs'),
+  config = {
+    //测试数据文件夹
+    dataPath: 'E:\\github\\HttpMock\\app\\test\\testData'
+  },
+  files = fs.readdirSync(config.dataPath);
 
+var mock = {
+
+};
+
+files.forEach(function (file) {
+  fs.unlinkSync(config.dataPath + '\\' + file);
+});
 describe('HttpMock', function () {
   describe('index', function () {
     beforeEach(function () {
@@ -16,10 +28,18 @@ describe('HttpMock', function () {
     });
     it('创建mock', function () {
       browser().navigateTo('#/mocks/update/');
-      input('mock.name').enter('www.httpmocktest.com');
+      input('mock.name').enter('www.httpmock1.com');
       element('[type="submit"]').click();
       expect(repeater('.nav-list li').count()).toBe(1);
-      expect(element('table:eq(0) td:eq(0)').text()).toEqual('www.httpmocktest.com');
+      expect(element('table:eq(0) td:eq(0)').text()).toEqual('www.httpmock1.com');
+    });
+    it('编辑mock', function () {
+      browser().navigateTo('#/mocks/');
+      element('.nav-list li:eq(0)').click();
+      element('[markfortest="mockedit"]').click();
+      input('mock.name').enter('www.httpmock2.com');
+      element('[type="submit"]').click();
+      expect(element('table:eq(0) td:eq(0)').text()).toEqual('www.httpmock2.com');
     });
     it('xxx', function () {
       pause();
