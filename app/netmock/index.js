@@ -34,7 +34,7 @@ var matchRoute = function (path) {
 var checkStaticDir = function (path) {
   var result = {
   },
-  route, dirs, filename, dir;
+  route, dirs, dir;
   //dir = dirReg.exec(path);
   if (!runningRoutes) return result;
   //filename = dir[2];
@@ -62,34 +62,33 @@ var checkStaticDir = function (path) {
 };
 
 //映射本地路径和http路径为一个完整的本地路径
-var resolvePath = function (route, httpPath) {
+var resolvePath = function(route, httpPath) {
   var locPath = route.responseData, sliceIndex = 2;
   if ('/' === route.path) {
     sliceIndex = 1;
   }
   httpPath = httpPath.split('/').slice(sliceIndex);
   return require('path').normalize(locPath + '/' + httpPath.join('/'));
-}
+};
 
 //生成文件夹浏览页面
 var renderDir = function (urlOpt, dir) {
   if (!fs.existsSync(dir)) return '';
   var files = fs.readdirSync(dir), resData = '<h3>' + dir + '</h3>', href = '';
   files.forEach(function (file) {
-    href = (urlOpt.href + '/' + file).replace(/((\:?)\/{1,})/g, function ($m, $1, $2) { return $2 ? $1 : '/' });
+    href = (urlOpt.href + '/' + file).replace(/((\:?)\/{1,})/g, function ($m, $1, $2) { return $2 ? $1 : '/'; });
     resData += '<a href="' + href + '">' + file + '</a></br>';
   });
   return resData;
 };
 
-var noErrorDecodeUri = function (url) {
+var noErrorDecodeUri = function(url) {
   try {
     return window.decodeURIComponent(url);
-  }
-  catch (e) {
+  } catch(e) {
     return url;
   }
-}
+};
 
 //运行代理服务器
 var proxyServer = httpProxy.createServer(function (req, res, proxy) {
@@ -142,8 +141,9 @@ var checkGbk = function (ct, buffer) {
 //日记
 proxyServer.proxy.on('proxyResponse', function (req, res, response) {
   var logObj = {}, pathArr, buffer = [], resStr = '',
-    urlOpt = require('url').parse(req.url, true),
-    url = noErrorDecodeUri(req.url);
+      urlOpt = require('url').parse(req.url, true),
+      url = noErrorDecodeUri(req.url),
+      filename;
   if (urlOpt.query.httpmocknolog) return;
   pathArr = url.split('/');
   filename = pathArr[pathArr.length - 1];
@@ -432,7 +432,7 @@ module.exports = {
   },
   runServer: function () {
     if (currentServer && currentServer.address()) {
-      currentServer.close(function (err, a) {
+      currentServer.close(function () {
         runServer();
       });
     }

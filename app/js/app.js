@@ -9,7 +9,7 @@
   },//当前http服务器状态
     serverStatus = {
       status: SERVER_STATUS.closed,
-      mock: null
+      mockId: null
     };
   app = global.app = {
     store: {},
@@ -112,7 +112,7 @@
         currentMock.isCurrent = true;
       }
 
-      return currentMock;;
+      return currentMock;
     },
     /**
      * @name delMock
@@ -161,24 +161,22 @@
     }
   };
 
-  //TODO 这里需要优化实现方式,现在丑爆了,等对angular再熟悉点再说.
+  //服务器运行状态改变
   nm.on('serverStatusChange', function (data) {
+    var currentMockScope = $('#startServer').scope(), mocksScope = $('#mocklist').scope();
     if (data.mock) {
-      serverStatus.mock = mocks[data.mock.id];
+      serverStatus.mockId = data.mock.id;
     }
     else {
-      serverStatus.mock = null;
+      serverStatus.mockId = null;
     }
     serverStatus.status = data.status;
-    //异步的,要手动执行数据检测,但是start方法可能是异步也可能是同步,如果是同步则报异常
-    try {
-      $('#startServer').scope().$digest();
-      $('#operationServer').scope().$digest();
-      $('#stopServer').scope().$digest();
-      $('#mocklist').scope().$digest();
+    
+    if (!currentMockScope.$$phase && !currentMockScope.$root.$$phase) {
+      currentMockScope.$digest();
     }
-    catch (e) {
-      console.log(e);
+    if (!mocksScope.$$phase && !mocksScope.$root.$$phase) {
+      mocksScope.$digest();
     }
   });
 
@@ -248,7 +246,7 @@
      * @returns {Object} 保存结果.
      */
     update: function (ss) {
-      return nm.saveSystemSetting(ss)
+      return nm.saveSystemSetting(ss);
     }
   };
 
@@ -265,7 +263,7 @@
     //拖动文件
     document.ondrop = function (e) {
       e.preventDefault();
-      var mock = app.store.mock.getCurrentMock(), ct, path, pathArr, filename, route = new app.model.Route(mock.id);
+      var mock = app.store.mock.getCurrentMock(),  path, pathArr, filename, route = new app.model.Route(mock.id);
       if (!mock) return;
       if (!e.dataTransfer.files.length) return;
       //返回值
@@ -323,7 +321,7 @@
     el.find('span').text(txt);
     title = title || '提示!';
     type = type || app.showMsg.TYPES.tip;
-    el.removeClass('alert-error').removeClass('alert-success').removeClass('alert-info').addClass(type)
+    el.removeClass('alert-error').removeClass('alert-success').removeClass('alert-info').addClass(type);
     titleEl.text(title);
     if (!btn) {
       $('#nextHelp').hide();
@@ -356,10 +354,10 @@
     changeStatus: function (state) {
       var $navList = $('#navlist');
       $navList.find('li').removeClass('active');
-      $navList.find('li.' + state).addClass('active')
+      $navList.find('li.' + state).addClass('active');
     }
   };
-})(this);
+})(window);
 
 var httpmock = angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controllers']);
 httpmock.config(function ($stateProvider, $urlRouterProvider) {
@@ -370,7 +368,7 @@ httpmock.config(function ($stateProvider, $urlRouterProvider) {
       url: "/mocks",
       templateUrl: "partials/mock/list.html",
       controller: 'Mocks',
-      onEnter: function () {
+      onEnter: function() {
         app.store.nav.changeStatus(app.store.nav.NAVLIST.mocks);
       }
     })
@@ -397,7 +395,7 @@ httpmock.config(function ($stateProvider, $urlRouterProvider) {
       url: '/system',
       templateUrl: 'partials/system.html',
       controller: 'System',
-      onEnter: function () {
+      onEnter: function() {
         app.store.nav.changeStatus(app.store.nav.NAVLIST.system);
       }
     })
@@ -406,10 +404,10 @@ httpmock.config(function ($stateProvider, $urlRouterProvider) {
       url: '/log',
       templateUrl: 'partials/log.html',
       controller: 'Log',
-      onEnter: function () {
+      onEnter: function() {
         app.store.nav.changeStatus(app.store.nav.NAVLIST.log);
       }
-    })
+    });
 });
 
 //监听文件拖动

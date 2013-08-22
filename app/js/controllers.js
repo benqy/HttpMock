@@ -45,6 +45,9 @@ angular.module('httpmock.controllers', [])
     };
     //服务器操作
     $scope.serverStatus = app.store.mock.getServerStatus();
+    $scope.$watch('serverStatus.status', function(a, b) {
+      console.log(a, b);
+    });
     $scope.runServer = function (mock) {
       app.store.mock.run(mock.id);
     };

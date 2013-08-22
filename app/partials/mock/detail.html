@@ -19,21 +19,21 @@
         </tbody>
     </table>
     <div class="btn-group">
-        <a title="启动服务器" id="startServer" class="btn btn-info" ng-show="serverStatus.status=='closed'||(serverStatus.status=='running' && serverStatus.mock.id!=currentMock.id)" ng-click="runServer(currentMock)">
+        <a title="启动服务器" id="startServer" class="btn btn-info" ng-show="serverStatus.status=='closed'||(serverStatus.status=='running' && serverStatus.mockId!=currentMock.id)" ng-click="runServer(currentMock)">
             <i class="icon-white icon-play"></i>
         </a>
         <a title="请关闭所有打开的连接" id="operationServer" style="display:none;margin-left: 0;border-top-left-radius: 4px;border-bottom-left-radius: 4px;" class="btn btn-warning" ng-show="serverStatus.status=='operating'">
             <i class="icon-white  icon-random"></i>
         </a>
-        <a title="运行中,点击关闭服务器" id="stopServer"  style="display:none;margin-left: 0;border-top-left-radius: 4px;border-bottom-left-radius: 4px;" class="btn btn-success" ng-show="serverStatus.status=='running'&&serverStatus.mock&&serverStatus.mock.id==currentMock.id" ng-click="stopServer()">
+        <a title="运行中,点击关闭服务器" id="stopServer"  style="display:none;margin-left: 0;border-top-left-radius: 4px;border-bottom-left-radius: 4px;" class="btn btn-success" ng-show="serverStatus.status=='running'&&serverStatus.mockId==currentMock.id" ng-click="stopServer()">
             <i class="icon-white icon-stop"></i>
         </a>
         <a title="编辑Mock" class="btn btn-info" markfortest="mockedit" href="#/mocks/update/{{currentMock.id}}"><i class="icon-edit  icon-white"></i></a>
         <a title="删除Mock"  ng-click="delMock(currentMock)" class="btn btn-info"><i class="icon-trash  icon-white"></i></a>
-        <a title="添加新的路由" class="btn btn-info" href="#/mocks/updateroute/{{currentMock.id}}/"><i class="icon-plus  icon-white"></i></a>
+        <a title="添加新的路由" markfortest="routeadd" class="btn btn-info" href="#/mocks/updateroute/{{currentMock.id}}/"><i class="icon-plus  icon-white"></i></a>
     </div>
     <h3>路由列表</h3>
-    <table class="table table-hover">
+    <table class="table table-hover" markfortest="routelist">
         <thead>
             <tr>
                 <th>#</th>

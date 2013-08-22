@@ -12,7 +12,7 @@
         <div class="control-group">
             <label class="control-label">Status Code</label>
             <div class="controls">
-                <select name="statusCode" ng-model="route.statusCode" ng-options="k as v for (k, v) in statusCodes">
+                <select name="statusCode" ng-model="route.statusCode" ng-options="k as (k+' ' +v) for (k, v) in statusCodes">
                 </select>
             </div>
         </div>
@@ -42,10 +42,10 @@
         <div class="control-group">
             <label class="control-label">自定义Header</label>
             <div class="controls">
-                <p class="customCustomHeader" ng-repeat="ct in route.customHeaders">
-                    <input class="span2 headerName" placeholder="清空即可删除" type="text" ng-model="ct.name">
+                <p ng-repeat="ct in route.customHeaders">
+                    <input class="span2" placeholder="清空即可删除" type="text" ng-model="ct.name">
                     :
-                        <input class="span3 headerValue" placeholder="清空即可删除" type="text" ng-model="ct.value"> <a href="javascript://" class="btn btn-success btn-mini btn-add-header" ng-click="addCustomHeader()"><i class="icon icon-plus icon-white"></i></a>
+                        <input class="span3" placeholder="清空即可删除" type="text" ng-model="ct.value"> <a href="javascript://" class="btn btn-success btn-mini" ng-click="addCustomHeader()"><i class="icon-plus icon-white"></i></a>
                 </p>
             </div>
         </div>
@@ -54,7 +54,7 @@
                 <input type="checkbox" name="customHandler" ng-model="route.customHandler">
                 自定义函数(返回值作为函数运行,并返回运行结果)
                         <a ng-mouseover="showHelp($event)" ng-mouseleave="hideHelp($event)"  class="btn btn-small marginLeft3" href="javascript://" data-toggle="popover">帮助</a>
-                <div class="popover fade left in" style="top: -122px; left: 49px; display: hide;"><div class="arrow"></div><h3 class="popover-title">自定义处理函数</h3><div class="popover-content">
+                <div class="popover fade left in" style="top: -122px; left: 49px; display: none;"><div class="arrow"></div><h3 class="popover-title">自定义处理函数</h3><div class="popover-content">
             <p>如果勾选此项,则请求会把返回值里的内容当作函数体来执行.函数的签名如下:</p>
 <pre><code>
 function(query){
