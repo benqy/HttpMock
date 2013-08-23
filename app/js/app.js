@@ -250,8 +250,34 @@
     }
   };
 
-  app.store.log = {    
+  app.store.log = {
+    /**
+     * @name logs
+     * @Array
+     *
+     * @description 包含所有日记的数组
+     */
     logs: [],
+    /**
+     * @name get
+     * @function
+     *
+     * @description 获取指定id的日记
+     * @param {string} id 日记的id.
+     * @returns {Object} 日记对象.
+     */
+    get:function(id) {
+      for (var i = 0, len = app.store.log.logs.length; i < len; i++) {
+        if (app.store.log.logs[i].id === id) return app.store.log.logs[i];
+      }
+    },
+    /**
+     * @name clear
+     * @function
+     *
+     * @description 清空http日记
+     * @returns undefined
+     */
     clear: function () {
       nm.clearLog();
       app.store.log.logs.splice(0,app.store.log.logs.length);

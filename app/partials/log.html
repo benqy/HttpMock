@@ -1,4 +1,4 @@
-﻿<div id="logWrap" style="padding: 5px;">
+﻿<div id="logWrap" style="padding: 5px;width:100%;">
     <div class="input-append">
         <input class="span2" ng-model="query" placeholder="搜索" type="text">
         <button class="btn" type="button" ng-click="clear()">清空列表</button>
@@ -20,18 +20,12 @@
         <tbody>
             <tr ng-repeat="log in logs| filter:{filename:query} | orderBy:order:false">
                 <td>{{log.date| date: 'HH:mm:ss'}}</td>
-                <td>
-                    <span style="display: inline-block; width: 250px; text-overflow: ellipsis;">
-                        {{log.filename.slice(0,35)}}
-                    </span>
-                </td>
+                <td><span style="display: inline-block; max-width: 250px;">{{log.filename.slice(0,35)}}</span></td>
                 <td>{{log.method}}</td>
                 <td>{{log.contentType}}</td>
                 <td>{{log.statusCode}}</td>
-                <td>
-                    <a href="javascript://" log-head-content="{{$index}}">点击查看</a>
-                </td>
-                <td><a href="javascript://" log-content="{{$index}}">点击查看</a></td>
+                <td><a href="javascript://" log-head-content="{{log.id}}">点击查看</a></td>
+                <td><a href="javascript://" log-content="{{log.id}}">点击查看</a></td>
                 <td>{{log.size}}</td>
                 <td>{{log.delay}}</td>
             </tr>

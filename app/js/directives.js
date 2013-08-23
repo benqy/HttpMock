@@ -3,9 +3,9 @@
 angular.module('httpmock.directives', [])
   .directive('logHeadContent', [function () {
     return function (scope, elem, attrs) {
-      var index = attrs.logHeadContent;
+      var id = attrs.logHeadContent;
       $(elem[0]).on('click', function () {
-        var item = app.store.log.logs[index],html = '';
+        var item = app.store.log.get(id),html = '';
         html += '<p><strong>Request URL:</strong>' + item.url + '</p>';
         html += '<p><strong>Request Method:</strong>' + item.method + '</p>';
         html += '<p><strong>Status Code:</strong>' + item.statusCode + '</p>';
@@ -28,9 +28,9 @@ angular.module('httpmock.directives', [])
   }])
   .directive('logContent',[function() {
     return function (scope, elem, attrs) {
-      var index = attrs.logContent;
+      var id = attrs.logContent;
       $(elem[0]).on('click', function() {
-        var item = app.store.log.logs[index],
+        var item = app.store.log.get(id),
             dataType = item.resObj.dataType,
             content = '无法预览',
             contentStyle = 'xml',

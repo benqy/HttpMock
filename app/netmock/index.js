@@ -470,6 +470,7 @@ module.exports = {
   },
   addLog: function (obj) {
     obj.date = new Date();
+    obj.id = util.generalId();
     mockLogs.push(obj);
     module.exports.fire('log', obj);
   },
