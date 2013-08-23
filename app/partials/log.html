@@ -6,19 +6,19 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>时间</th>
-                <th>地址</th>
-                <th>Method</th>
-                <th>Type</th>
-                <th>Status</th>
+                <th ng-click="order=order=='date'?'-date':'date';">时间</th>
+                <th ng-click="order=order=='filename'?'-filename':'filename';">地址</th>
+                <th ng-click="order=order=='method'?'-method':'method';">Method</th>
+                <th ng-click="order=order=='contentType'?'-contentType':'contentType';">Type</th>
+                <th ng-click="order=order=='statusCode'?'-statusCode':'statusCode';">Status</th>
                 <th>header</th>
                 <th>内容</th>
-                <th>Size(kb)</th>
-                <th>耗时(ms)</th>
+                <th ng-click="order=order=='size'?'-size':'size';">Size(kb)</th>
+                <th ng-click="order=order=='delay'?'-delay':'delay';">耗时(ms)</th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="log in logs| filter:{filename:query}">
+            <tr ng-repeat="log in logs| filter:{filename:query} | orderBy:order:false">
                 <td>{{log.date| date: 'HH:mm:ss'}}</td>
                 <td>
                     <span style="display: inline-block; width: 250px; text-overflow: ellipsis;">

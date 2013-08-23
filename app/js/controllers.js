@@ -146,6 +146,7 @@ angular.module('httpmock.controllers', [])
   .controller('Log', function ($scope) {
     $scope.logs = app.store.log.logs;
     $scope.query = '';
+    $scope.order = 'date';
     $scope.clear = function() {
       app.store.log.clear();
     };
