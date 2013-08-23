@@ -45,9 +45,6 @@ angular.module('httpmock.controllers', [])
     };
     //服务器操作
     $scope.serverStatus = app.store.mock.getServerStatus();
-    $scope.$watch('serverStatus.status', function(a, b) {
-      console.log(a, b);
-    });
     $scope.runServer = function (mock) {
       app.store.mock.run(mock.id);
     };
@@ -147,5 +144,9 @@ angular.module('httpmock.controllers', [])
     };
   })
   .controller('Log', function ($scope) {
-
+    $scope.logs = app.store.log.logs;
+    $scope.query = '';
+    $scope.clear = function() {
+      app.store.log.clear();
+    };
   });

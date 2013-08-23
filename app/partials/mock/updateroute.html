@@ -4,7 +4,7 @@
         <div class="control-group"  ng-class="{error:routeForm.path.$error.required || routeForm.path.$error.pattern}">
             <label class="control-label">路径</label>
             <div class="controls">
-                <input type="text"  name="path" ng-model="route.path" placeholder="路径" value="/" required ng-pattern="/^\/[\w-_\.]*$/">
+                <input type="text"  name="path" ng-model="route.path" autofocus placeholder="路径" value="/" required ng-pattern="/^\/[\w-_\.]*$/">
                 <span class="help-inline" ng-show="routeForm.path.$error.required">路径不能为空</span>
                 <span class="help-inline" ng-show="routeForm.path.$error.pattern">路径必须以/开头,不能使用特殊字符</span>
             </div>

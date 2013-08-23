@@ -250,6 +250,24 @@
     }
   };
 
+  app.store.log = {    
+    logs: [],
+    clear: function () {
+      nm.clearLog();
+      app.store.log.logs.splice(0,app.store.log.logs.length);
+    }
+  };
+  
+  nm.on('log', function (data) {
+    //if (!log.filter || ~data.url.toLowerCase().indexOf(log.filter)) {
+    var scope = $('#logWrap').scope();
+    app.store.log.logs.push(data);
+    if (scope && !scope.$$phase && !scope.$root.$$phase) {
+      scope.$digest();
+    }
+    //}
+  });
+  
   /**
    * @name listenFileDrag
    * @function
@@ -359,7 +377,7 @@
   };
 })(window);
 
-var httpmock = angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controllers']);
+var httpmock = angular.module('httpmock', ['ui.state', 'httpmock.filters', 'httpmock.controllers', 'httpmock.directives']);
 httpmock.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise("/mocks/");
   $stateProvider

@@ -1,9 +1,7 @@
-﻿<div id="logWrap">
+﻿<div id="logWrap" style="padding: 5px;">
     <div class="input-append">
-        <input class="span2" id="logFilterTxt" type="text">
-        <button class="btn" type="button" id="logFilterBtn">筛选</button>
-        <button class="btn" type="button" id="clearLog">清空列表</button>
-        <button class="btn " type="button" disabled="disabled">导出</button>
+        <input class="span2" ng-model="query" placeholder="搜索" type="text">
+        <button class="btn" type="button" ng-click="clear()">清空列表</button>
     </div>
     <table class="table table-hover">
         <thead>
@@ -19,11 +17,28 @@
                 <th>耗时(ms)</th>
             </tr>
         </thead>
-        <tbody id="loglist">
+        <tbody>
+            <tr ng-repeat="log in logs| filter:{filename:query}">
+                <td>{{log.date| date: 'HH:mm:ss'}}</td>
+                <td>
+                    <span style="display: inline-block; width: 250px; text-overflow: ellipsis;">
+                        {{log.filename.slice(0,35)}}
+                    </span>
+                </td>
+                <td>{{log.method}}</td>
+                <td>{{log.contentType}}</td>
+                <td>{{log.statusCode}}</td>
+                <td>
+                    <a href="javascript://" log-head-content="{{$index}}">点击查看</a>
+                </td>
+                <td><a href="javascript://" log-content="{{$index}}">点击查看</a></td>
+                <td>{{log.size}}</td>
+                <td>{{log.delay}}</td>
+            </tr>
         </tbody>
     </table>
     <pre id="logContentWrap">
-        <button type="button" id="logContentClose" class="close">×</button>
+        <button type="button" log-close-content class="close">×</button>
         <code id="logContent" class="javascript"></code>
     </pre>
 </div>
