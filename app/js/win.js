@@ -62,7 +62,7 @@ $('#closeWindow').on('click', function () {
 //});
 
 $('#needHelp').on('click', function () {
-  gui.Shell.openExternal('http://www.benqy.com');
+  gui.Shell.openExternal('https://github.com/benqy/HttpMock');
 });
 //process.on('uncaughtException', function (err) {
 //  console.log(err);
