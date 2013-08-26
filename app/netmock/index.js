@@ -1,15 +1,41 @@
 ﻿var http = require('http'), fs = require('fs'), httpProxy = require('http-proxy'),
     host = require('./host'), mocks = require('./mocks'), util = require('../helpers/util'),
-    runningMock, runningRoutes, currentServer, iconv = require('iconv-lite'), zlib = require('zlib'),
-    filenameReg = /^[a-zA-Z]:(([a-zA-Z]*)||([a-zA-Z]*\\))*/, dirReg = /(^.*)\/(.*\..*)$/,
-    events = {}, SYSTEM_SETTING_FILE = './conf/systemsetting.json', systemSetting,
+    iconv = require('iconv-lite'), zlib = require('zlib'),
+    //当前正在运行中的mock
+    runningMock,
+    //运行中的路由列表
+    runningRoutes,
+    //http服务器
+    currentServer,
+    //服务器状态
     SERVER_STATUS = {
       running: 'running',
       operating: 'operating',
       closed: 'closed'
-    }, mockLogs = [], isRunning = SERVER_STATUS.closed;
+    },
+    //服务器运行状态
+    isRunning = SERVER_STATUS.closed,
+    //本地文件或者文件夹
+    filenameReg = /^[a-zA-Z]:(([a-zA-Z]*)||([a-zA-Z]*\\))*/,
+    //匹配url中的多级路径,并且带有后缀名
+    dirReg = /(^.*)\/(.*\..*)$/,
+    //自定义事件监听
+    events = {},
+    //默认系统配置存储目录
+    SYSTEM_SETTING_FILE = './conf/systemsetting.json',
+    //系统设置
+    systemSetting,
+    //日记
+    mockLogs = [];
 
-//查找指定的路径是否匹配当前运行的mock中的路由.
+/**
+ * @name matchRoute
+ * @function
+ *
+ * @description 判断指定的路径是否匹配当前运行的mock中的路由
+ * @param {string} path 要判断的路径
+ * @returns {Object} route 匹配到的route.
+ */
 var matchRoute = function (path) {
   var route;
   if (!runningRoutes) return;
@@ -30,15 +56,18 @@ var matchRoute = function (path) {
   return route;
 };
 
-//判断路径的是否属于某个静态文件夹路由的子文件
+/**
+ * @name checkStaticDir
+ * @function
+ *
+ * @description 判断路径的是否属于某个静态文件夹路由的子目录或者子文件
+ * @param {string} path 要判断的路径
+ * @returns {Object} route 匹配到的route.
+ */
 var checkStaticDir = function (path) {
-  var result = {
-  },
+  var result = {},
   route, dirs, dir;
-  //dir = dirReg.exec(path);
   if (!runningRoutes) return result;
-  //filename = dir[2];
-  //dir = dir[1];
   dirs = path.split('/');
   dirs = dirs.filter(function (n) {
     return !!n;
@@ -61,7 +90,15 @@ var checkStaticDir = function (path) {
   return result;
 };
 
-//映射本地路径和http路径为一个完整的本地路径
+/**
+ * @name resolvePath
+ * @function
+ *
+ * @description 根据匹配的路由和http路径,计算出本地目录的真实路径
+ * @param {object} route 匹配的路由
+ * @param {string} httpPath http的路径部分
+ * @returns {string} 本地真实路径.
+ */
 var resolvePath = function(route, httpPath) {
   var locPath = route.responseData, sliceIndex = 2;
   if ('/' === route.path) {
@@ -71,7 +108,15 @@ var resolvePath = function(route, httpPath) {
   return require('path').normalize(locPath + '/' + httpPath.join('/'));
 };
 
-//生成文件夹浏览页面
+/**
+ * @name renderDir
+ * @function
+ *
+ * @description 根据匹配的路由和http路径,计算出本地目录的真实路径
+ * @param {Object} urlOpt http请求信息
+ * @param {string} dir 对应的本地目录
+ * @returns {string} 本地目录的文件列表的html表示
+ */
 var renderDir = function (urlOpt, dir) {
   if (!fs.existsSync(dir)) return '';
   var files = fs.readdirSync(dir), resData = '<h3>' + dir + '</h3>', href = '';
@@ -127,8 +172,16 @@ var proxyServer = httpProxy.createServer(function (req, res, proxy) {
   }
 });
 
-//检查html内容是否为gbk编码
-var checkGbk = function (ct, buffer) {
+/**
+ * @name isGbk
+ * @function
+ *
+ * @description 检查html内容是否为gbk编码
+ * @param {string} ct http的content type
+ * @param {buffer} buffer http response的内容
+ * @returns {boolean} true:是gbk编码,false:非gbk编码
+ */
+var isGbk = function (ct, buffer) {
   var ct = ct || '', contentStr = buffer.toString();
   if (~ct.toLowerCase().indexOf('gbk') || ~ct.toLowerCase().indexOf('gb2312')
      || ~contentStr.indexOf('charset=gb2312') || ~contentStr.indexOf('charset=gbk')
@@ -167,7 +220,8 @@ proxyServer.proxy.on('proxyResponse', function (req, res, response) {
     logObj.resObj = resObj;
     if (resObj.gzip) {
       zlib.unzip(buffer, function (err, buffer) {
-        if (checkGbk(response.headers['content-type'], buffer)) {
+        if (isGbk(response.headers['content-type'], buffer)) {
+          //将gbk转为utf8
           buffer = iconv.decode(buffer, 'GBK');
         }
         logObj.content = buffer;
@@ -176,7 +230,7 @@ proxyServer.proxy.on('proxyResponse', function (req, res, response) {
       });
     }
     else {
-      if (checkGbk(response.headers['content-type'], buffer)) {
+      if (isGbk(response.headers['content-type'], buffer)) {
         buffer = iconv.decode(buffer, 'GBK');
       }
       logObj.content = buffer;
@@ -342,6 +396,15 @@ module.exports = {
     css: 'css',
     file: 'file'
   },
+  /**
+   * @name parseRes
+   * @function
+   *
+   * @description 判断http返回的内容的类型以及是否经过gzip压缩
+   * @param {object} resHeader http response header
+   * @param {url} url http请求的地址
+   * @returns {Object} dataType:返回内容的格式,gzip:是否经过gzip压缩
+   */
   parseRes: function (resHeader, url) {
     var dataType = this.resDataType.file, ct = resHeader['content-type'] || '', gzip = false;
     if (~url.indexOf('.png') || ~url.indexOf('.jpg') || ~url.indexOf('.gif') || ~url.indexOf('.bmp') || ~url.indexOf('.ico') || ~ct.indexOf('image')) {

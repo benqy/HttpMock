@@ -1,11 +1,11 @@
 {
         "name"    : "netmock",
-        "description" : "http,socket mock",
+        "description" : "http mock",
         "author"  : {
                 "name"  : "benqy",
                 "email" : "hmjlr123@gmail.com",
-                "url"   : "www.benqy.com"
+                "url"   : "https://github.com/benqy"
         },
-        "version" : "0.0.1",
+        "version" : "0.1.2",
         "main"    : "index.js"
 }
