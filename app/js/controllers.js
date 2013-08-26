@@ -1,11 +1,11 @@
 ﻿'use strict';
 
 angular.module('httpmock.controllers', [])
-  .controller('Mocks', function ($scope) {
+  .controller('Mocks', function($scope) {
     $scope.mocks = app.store.mock.getMock();
     $scope.serverStatus = app.store.mock.getServerStatus();
   })
-  .controller('CurrentMock', function ($scope, $stateParams, $state) {
+  .controller('CurrentMock', function($scope, $stateParams, $state) {
     var currentMock = app.store.mock.getCurrentMock($stateParams.id), routes;
     routes = currentMock ? nm.mocks.getRoutes(currentMock.id) : undefined;
     //没有任何mock就跳转到mock列表
@@ -16,27 +16,27 @@ angular.module('httpmock.controllers', [])
     $scope.currentMock = currentMock;
     $scope.routes = routes;
     //显示鼠标鼠标指向的route的自定义header
-    $scope.showCustomHeaders = function (e) {
+    $scope.showCustomHeaders = function(e) {
       var $target = $(e.target);
       if (0 !== parseInt($target.text())) {
         $target.next('div').show();
       }
     };
-    $scope.hideCustomHeaders = function (e) {
+    $scope.hideCustomHeaders = function(e) {
       $(e.target).next('div').hide();
     };
 
-    $scope.openRoute = function (route) {
+    $scope.openRoute = function(route) {
       gui.Shell.openExternal('http://' + currentMock.name + (currentMock.port == 80 ? '' : ':' + currentMock.port) + route.path);
     };
-    $scope.delRoute = function (route) {
+    $scope.delRoute = function(route) {
       if (confirm('确认删除路径  ' + route.path)) {
         if (app.store.route.delRoute(route.mockId, route.id).success) {
           delete $scope.routes[route.id];
         }
       }
     };
-    $scope.delMock = function (mock) {
+    $scope.delMock = function(mock) {
       if (confirm('确认删除Mock : ' + mock.name)) {
         if (app.store.mock.delMock(mock.id).success) {
           $state.transitionTo('mocks.currentmock', {});
@@ -45,14 +45,14 @@ angular.module('httpmock.controllers', [])
     };
     //服务器操作
     $scope.serverStatus = app.store.mock.getServerStatus();
-    $scope.runServer = function (mock) {
+    $scope.runServer = function(mock) {
       app.store.mock.run(mock.id);
     };
-    $scope.stopServer = function () {
+    $scope.stopServer = function() {
       app.store.mock.stop();
     };
   })
-  .controller('UpdateMock', function ($scope, $stateParams, $state) {
+  .controller('UpdateMock', function($scope, $stateParams, $state) {
     var mock = new app.model.Mock();
     if ($stateParams.id) {
       mock = app.store.mock.getCurrentMock($stateParams.id);
@@ -60,17 +60,16 @@ angular.module('httpmock.controllers', [])
     $scope.title = $stateParams.id ? '编辑Mock:' + mock.name : '新建Mock';
     $scope.mock = angular.copy(mock);
     $scope.errorMsg = '';
-    $scope.update = function (formMock) {
+    $scope.update = function(formMock) {
       var result = app.store.mock.updateMock(formMock);
       if (result.success) {
         $state.transitionTo('mocks.currentmock', { id: formMock.id });
-      }
-      else {
+      } else {
         $scope.errorMsg = result.msg;
       }
     };
   })
-  .controller('UpdateRoute', function ($scope, $stateParams, $state) {
+  .controller('UpdateRoute', function($scope, $stateParams, $state) {
     var currentMock = app.store.mock.getCurrentMock($stateParams.mockid), route = new app.model.Route($stateParams.mockid);
     //如果是拖动文件触发的updateroute,则使用文件对应的route对象作为默认值
     if (window.dragToAddRoute) {
@@ -96,40 +95,39 @@ angular.module('httpmock.controllers', [])
       $scope.route.customHeaders.push({ name: '', value: '' });
     }
 
-    $scope.update = function (formRoute) {
+    $scope.update = function(formRoute) {
       formRoute.mockId = currentMock.id;
       var result = app.store.route.updateRoute(formRoute);
       if (result.success) {
         $state.transitionTo('mocks.currentmock', { id: currentMock.id });
-      }
-      else {
+      } else {
         $scope.errorMsg = result.msg;
       }
     };
 
-    $scope.addCustomHeader = function () {
+    $scope.addCustomHeader = function() {
       $scope.route.customHeaders = $scope.route.customHeaders || [];
       $scope.route.customHeaders.push({ name: '', value: '' });
     };
 
     //切换responseData提示的显示和隐藏.
-    $scope.showHelp = function (e) {
+    $scope.showHelp = function(e) {
       var $target = $(e.target);
       if (0 !== parseInt($target.text())) {
         $target.next('div').show();
       }
     };
-    $scope.hideHelp = function (e) {
+    $scope.hideHelp = function(e) {
       $(e.target).next('div').hide();
     };
   })
-  .controller('System', function ($scope) {
+  .controller('System', function($scope) {
     $scope.systemSetting = app.store.systemSetting.getSystemSetting();
-    $scope.addGlobalHeader = function () {
+    $scope.addGlobalHeader = function() {
       $scope.systemSetting.globalHeaders = $scope.systemSetting.globalHeaders || [];
       $scope.systemSetting.globalHeaders.push({ name: '', value: '' });
     };
-    $scope.update = function (systemSetting) {
+    $scope.update = function(systemSetting) {
       //如果没有指定保存的路径,则使用用户文件夹作为默认值
       if (!systemSetting.storeDir) {
         systemSetting.storeDir = require('nw.gui').App.dataPath[0];
@@ -137,17 +135,19 @@ angular.module('httpmock.controllers', [])
       var result = app.store.systemSetting.update(systemSetting);
       if (result.success) {
         alert('保存成功');
-      }
-      else {
+      } else {
         $scope.errorMsg = result.msg;
       }
     };
   })
-  .controller('Log', function ($scope) {
+  .controller('Log', function($scope) {
     $scope.logs = app.store.log.logs;
     $scope.query = '';
     $scope.order = 'date';
     $scope.clear = function() {
       app.store.log.clear();
     };
+  })
+  .controller('Host', function ($scope) {
+    $scope.groups = app.store.host.get();
   });

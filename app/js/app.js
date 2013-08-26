@@ -250,6 +250,12 @@
     }
   };
 
+  app.store.host = {
+    get:function() {
+      return nm.host.loadHostFile();
+    }
+  };
+
   app.store.log = {
     /**
      * @name logs
@@ -393,7 +399,8 @@
     NAVLIST: {
       mocks: 'mocks',
       system: 'system',
-      log: 'log'
+      log: 'log',
+      host:'host'
     },
     changeStatus: function (state) {
       var $navList = $('#navlist');
@@ -450,6 +457,14 @@ httpmock.config(function ($stateProvider, $urlRouterProvider) {
       controller: 'Log',
       onEnter: function() {
         app.store.nav.changeStatus(app.store.nav.NAVLIST.log);
+      }
+    })
+    .state('host', {      
+      url: '/host',
+      templateUrl: 'partials/host.html',
+      controller: 'Host',
+      onEnter:function() {
+        app.store.nav.changeStatus(app.store.nav.NAVLIST.host);
       }
     });
 });

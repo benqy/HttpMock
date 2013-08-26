@@ -1,0 +1,32 @@
+﻿<div style="padding: 5px 20px; width: calc(100% - 40px);">
+    <div ng-repeat="group in groups">
+        <table class="table table-condensed" markfortest="routelist">
+            <caption>{{group[0].group}}</caption>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ip</th>
+                    <th>域名</th>
+                    <th>启用</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="info" ng-repeat="host in group">
+                    <td>{{$index+1}}</td>
+                    <td>
+                        <input style="margin: 0;" type="text" name="ip" placeholder="ip" autofocus ng-model="host.ip" required ng-pattern="/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/">
+                    </td>
+                    <td>
+                        <input style="margin: 0;" type="text" name="name" placeholder="域名" autofocus ng-model="host.address" required ng-pattern="/^[a-z1-9\.\-_]*$/">
+                    </td>
+                    <td>
+                        <input style="margin: 0;" type="checkbox" name="effective" ng-model="host.effective"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <a class="btn btn-info" href="#">新建分组</a>
+        <a class="btn btn-info" href="#">保存</a>
+    </div>
+</div>

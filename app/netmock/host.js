@@ -1,5 +1,9 @@
-﻿var util = require('../helpers/util'),fs = require('fs');
-
+﻿var util = require('../helpers/util'), fs = require('fs'),
+    //匹配一行host配置(包括被注释的)
+    hostReg = /^(#*)\s*(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s{1,}([\w\.\-_]{1,})/,
+    //匹配一行分组注释
+    groupReg = /^#{1,}httpmockgroup\[(.*)\]/;
+ 
 /**
  * @name readHost
  * @function
@@ -9,6 +13,31 @@
  */
 function readHost() {
   return util.readFileSync('C:\\Windows\\System32\\drivers\\etc\\hosts');
+}
+
+function loadHostFile() {
+  var hosts = {"未分组":[]}, hostFileLines = readHost().split('\n'),currentGroup;
+  hostFileLines.forEach(function (line) {
+    var matchs = hostReg.exec(line), host = {}, groupMatch = groupReg.exec(line);
+    if (groupMatch) {
+      currentGroup = groupMatch[1];
+    }
+    if (matchs && !/127\.0\.0\.1\s*localhost/.test(line)) {
+      host.effective = !matchs[1];
+      host.ip = matchs[2];
+      host.address = matchs[3];
+      if (currentGroup) {
+        host.group = currentGroup;
+        currentGroup = undefined;
+      } else {
+        host.group = '未分组';
+      }
+      hosts[host.group] = hosts[host.group] || [];
+      hosts[host.group].push(host);
+    }
+  });
+  console.log(hosts);
+  return hosts;
 }
 
 /**
@@ -73,6 +102,7 @@ function removeHost(ip, addrs) {
 }
 
 exports.readHost = readHost;
+exports.loadHostFile = loadHostFile;
 exports.addHost = addHost;
 exports.removeHost = removeHost;
 
