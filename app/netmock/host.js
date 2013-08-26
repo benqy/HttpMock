@@ -12,24 +12,35 @@ function readHost() {
 }
 
 /**
+ *TODO 正确的获取host路径
  * @name addHost
  * @function
  *
- * @description 向windows系统的host文件中添加一行host配置
+ * @description 向windows系统的host文件中添加host配置
  * @param {string} ip IP
- * @param {string} address 域名
+ * @param {string} addrs 域名,多个可用逗号分隔
  * @returns {Boolean} 成功或者失败
  */
-function addHost(ip, address) {
+function addHost(ip, addrs) {
+  if (!addrs) return false;
   try{
-    var txt = readHost();
-    var newHost = '\r\n' + ip + ' ' + address;
-    txt = txt.replace(new RegExp(newHost, 'g'), '');
+    var txt = readHost(), addrArr = addrs.split(','), newHost = '';
+    addrArr.forEach(function(addr) {
+      if (addr) {
+        //移除已经有的此域名配置
+        txt = txt.replace(new RegExp(ip + ' ' + addr, 'g'), '');
+        //移除多余的换行
+        txt = txt.replace(/[\r\n]*$/g, '');
+        newHost += '\r\n' + ip + ' ' + addr;
+      }
+    });
     txt += newHost;
+    txt = txt.replace(/[\r\n]*$/g, '');
     util.writeFileSync('C:\\Windows\\System32\\drivers\\etc\\hosts', txt);
     return true;
   }
   catch (e) {
+    console.dir(e);
     return false;
   }
 }
@@ -43,12 +54,16 @@ function addHost(ip, address) {
  * @param {string} address 域名
  * @returns {Boolean} 成功或者失败
  */
-function removeHost(ip, address) {
+function removeHost(ip, addrs) {
   try {
-    var txt = readHost();
-    var newHost = '\r\n' + ip + ' ' + address;
-    txt = txt.replace(new RegExp(newHost, 'g'), '');
-    txt = txt.replace(new RegExp(ip + ' ' + address, 'g'), '');
+    var txt = readHost(), addrArr = addrs.split(',');
+    addrArr.forEach(function (addr) {
+      if (addr) {
+        txt = txt.replace(new RegExp('\r\n' + ip + ' ' + addr, 'g'), '');
+        txt = txt.replace(new RegExp(ip + ' ' + addr, 'g'), '');
+      }
+    });
+    txt = txt.replace(/[\r\n]*$/g, '');
     util.writeFileSync('C:\\Windows\\System32\\drivers\\etc\\hosts', txt);
     return true;
   }

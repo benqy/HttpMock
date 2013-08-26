@@ -39,8 +39,9 @@
 var matchRoute = function (path) {
   var route;
   if (!runningRoutes) return;
+  path = path.toLowerCase();
   for (var key in runningRoutes) {
-    if (runningRoutes[key].path === path) {
+    if (runningRoutes[key].path.toLowerCase() === path) {
       route = runningRoutes[key];
       break;
     }
@@ -68,7 +69,7 @@ var checkStaticDir = function (path) {
   var result = {},
   route, dirs, dir;
   if (!runningRoutes) return result;
-  dirs = path.split('/');
+  dirs = path.toLowerCase().split('/');
   dirs = dirs.filter(function (n) {
     return !!n;
   });
@@ -127,6 +128,14 @@ var renderDir = function (urlOpt, dir) {
   return resData;
 };
 
+/**
+ * @name noErrorDecodeUri
+ * @function
+ *
+ * @description 尝试对url进行decodeURIComponent,如果失败,则还回原始url
+ * @param {string} url 要decode的url
+ * @returns {string} decode之后的url
+ */
 var noErrorDecodeUri = function(url) {
   try {
     return window.decodeURIComponent(url);
@@ -135,21 +144,37 @@ var noErrorDecodeUri = function(url) {
   }
 };
 
+/**
+ * @name isMatchMockName
+ * @function
+ *
+ * @description 判断指定的域名是否匹配当前运行的mock(name以及secondaryName)
+ * @param {string} host 要判断的域名
+ * @returns {boolean}  true:匹配
+ */
+var isMatchMockName = function(host) {
+  var result = false;
+  if (runningMock && (host == runningMock.name.toLowerCase() || ~runningMock.secondaryName.toLowerCase().indexOf(host))) {
+    result = true;
+  }
+  return result;
+};
+
 //运行代理服务器
 var proxyServer = httpProxy.createServer(function (req, res, proxy) {
   req.reqDate = new Date();
-  var buffer = httpProxy.buffer(req);
-  var urlOpt = require('url').parse(req.url, true), route,
+  var buffer = httpProxy.buffer(req),
+    url = req.url.toLowerCase(),
+    urlOpt = require('url').parse(url, true), route,
     host = urlOpt.hostname || 'localhost', port = urlOpt.port || 80;
   urlOpt.path = noErrorDecodeUri(urlOpt.path);
   urlOpt.pathname = noErrorDecodeUri(urlOpt.pathname);
-  if (runningMock && host == runningMock.name
-    && (route = matchRoute(urlOpt.pathname))
-    && !route.noProxy) {
+  route = matchRoute(urlOpt.pathname);
+  if (isMatchMockName(host) && route && !route.noProxy) {
     host = 'localhost';
     port = runningMock.port || 80;
   }
-  else if (runningMock && host == runningMock.name && checkStaticDir(urlOpt.pathname).route) {
+  else if (isMatchMockName(host)  && checkStaticDir(urlOpt.pathname).route) {
     host = 'localhost';
     port = runningMock.port || 80;
   }
@@ -194,7 +219,7 @@ var isGbk = function (ct, buffer) {
 //日记
 proxyServer.proxy.on('proxyResponse', function (req, res, response) {
   var logObj = {}, pathArr, buffer = [], resStr = '',
-      urlOpt = require('url').parse(req.url, true),
+      urlOpt = require('url').parse(req.url.toLowerCase(), true),
       url = noErrorDecodeUri(req.url),
       filename;
   if (urlOpt.query.httpmocknolog) return;
@@ -245,7 +270,7 @@ proxyServer.listen(17173);
 var runServer = function () {
   //处理请求
   currentServer = http.createServer(function (req, res) {
-    var urlOpt = require('url').parse(req.url, true), route, header = {}, resData, customFn;
+    var urlOpt = require('url').parse(req.url.toLowerCase(), true), route, header = {}, resData, customFn;
     urlOpt.path = noErrorDecodeUri(urlOpt.path);
     urlOpt.pathname = noErrorDecodeUri(urlOpt.pathname);
     var dirArr = dirReg.exec(urlOpt.pathname), filename;
@@ -455,9 +480,12 @@ module.exports = {
     if (mock.mockType == 1) {
       host.disProxy();
       host.addHost('127.0.0.1', mock.name);
+      host.addHost('127.0.0.1', mock.secondaryName);
+      
     }
     else {
       host.removeHost('127.0.0.1', mock.name);
+      host.removeHost('127.0.0.1', mock.secondaryName);
       host.setProxy();
     }
     isRunning = SERVER_STATUS.operating;
@@ -473,12 +501,16 @@ module.exports = {
       runningRoutes = mocks.getRoutes(runningMock.id);
     }
   },
+  removeCurrentHost:function() {
+    runningMock && host.removeHost('127.0.0.1', runningMock.name);
+    runningMock && host.removeHost('127.0.0.1', runningMock.secondaryName);
+  },
   stop: function () {
     isRunning = SERVER_STATUS.operating;
     module.exports.fire('serverStatusChange', { status: SERVER_STATUS.operating });
     currentServer && currentServer.address() && currentServer.close(function () {
       host.disProxy();
-      runningMock && host.removeHost('127.0.0.1', runningMock.name);
+      module.exports.removeCurrentHost();
       runningMock = undefined;
       runningRoutes = undefined;
       currentServer = null;

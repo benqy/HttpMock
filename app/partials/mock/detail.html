@@ -4,6 +4,7 @@
         <thead>
             <tr>
                 <th>域名</th>
+                <th>备用域名</th>
                 <th>端口</th>
                 <th>描述</th>
                 <th>类型</th>
@@ -12,6 +13,7 @@
         <tbody>
             <tr>
                 <td>{{currentMock.name}}</td>
+                <td>{{currentMock.secondaryName}}</td>
                 <td>{{currentMock.port}}</td>
                 <td>{{currentMock.desc}}</td>
                 <td>{{currentMock.mockType | mockType}}</td>

@@ -35,6 +35,8 @@ var updateMock = function (data) {
   if (!data.id) {
     data.id = util.generalId();
   }
+  data.name = data.name.toLowerCase();
+  data.secondaryName = data.secondaryName.toLowerCase();
   mocks[data.id] = data;
   util.writeFileSync(DIR_BASE + 'mocks.json', JSON.stringify(mocks));
   return { success: true, msg: 'success' };
@@ -87,12 +89,14 @@ var updateRoute = function (data) {
     }
     data.id = util.generalId();
   }
+  //移除空的customheader
   if (data.customHeaders) {
     data.customHeaders.forEach(function (item) {
       if (item.name && item.value) customHeaders.push(item);
     });
   }
   data.customHeaders = customHeaders;
+  data.path = data.path.toLowerCase();
   routes[data.id] = data;
   util.writeFileSync(fileName, JSON.stringify(routes));
   return { success: true, msg: 'success' };

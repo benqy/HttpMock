@@ -9,6 +9,13 @@
                 <span class="help-inline" ng-show="mockForm.name.$error.pattern">域名只能使用字母数字_-和"."</span>
             </div>
         </div>
+        <div class="control-group" ng-class="{error:mockForm.secondaryName.$error.pattern}">
+            <label class="control-label">备用域名</label>
+            <div class="controls">
+                <input type="text" name="secondaryName"  placeholder="多个使用逗号分隔" autofocus ng-model="mock.secondaryName" ng-pattern="/^[a-z1-9\.\-_\,]*$/">
+                <span class="help-inline" ng-show="mockForm.secondaryName.$error.pattern">域名只能使用字母数字_-和"."</span>
+            </div>
+        </div>
         <div class="control-group" ng-class="{error:mockForm.port.$error.required || mockForm.port.$error.pattern || mockForm.port.$error.min || mockForm.port.$error.max}">
             <label class="control-label">端口</label>
             <div class="controls">

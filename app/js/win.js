@@ -50,6 +50,7 @@ $('#maxWindow').on('click', function () {
 $('#closeWindow').on('click', function () {
   var win = gui.Window.get();
   nm.host.disProxy();
+  nm.removeCurrentHost();
   win.close();
 });
 
