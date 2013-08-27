@@ -251,8 +251,60 @@
   };
 
   app.store.host = {
+    /**
+      * @name get
+      * @function
+      *
+      * @description 读取host文件,并解析为分组后的集合对象
+      * @returns {Object} host集合对象
+      */
     get:function() {
       return nm.host.loadHostFile();
+    },
+    /**
+     * @name save
+     * @function
+     *
+     * @description 将host集合对象写入到host文件中.
+     * @param {Object} groups host集合对象
+     * @param {Object} groupNames 分组名称集合
+     * @returns {Object} host集合对象
+     */
+    save:function(groups,groupNames) {
+      groups = nm.host.reGroupHost(groups);
+      groups = nm.host.writeHostFile(groups, groupNames);
+      return groups;
+    },
+    /**
+     * @name remove
+     * @function
+     *
+     * @description 从host集合中删除匹配(ip和host)的第一个host.
+     * @param {Object} groups host集合对象
+     * @returns {Object} host集合对象
+     */
+    remove:function(groups,host) {
+      var group = groups[host.group];
+      group.hosts = group.hosts.filter(function(item) {
+        return item.ip != host.ip || item.address != host.address;
+      });
+      //if (!group.hosts.length) {
+      //  delete groups[host.group];
+      //}
+      return groups;
+    },
+    getGroupNames:function() {
+      return nm.host.loadGroupNames();
+    },
+    removeGroup: function (groups, group) {
+      var groupForDel = groups[group.name],defaultGroup = groups["未分组"];
+      groupForDel.hosts.forEach(function(host) {
+        host.group = "未分组";
+        defaultGroup.hosts.push(host);
+      });
+      groupForDel.hosts = [];
+      delete groups[group.name];
+      return groups;
     }
   };
 

@@ -5,7 +5,7 @@ html {
 
 body {
     height: calc(100% - 50px);
-    overflow:hidden;
+    overflow: hidden;
 }
 /*滚动条*/
 ::-webkit-scrollbar-track {
@@ -73,13 +73,14 @@ body {
     overflow: auto;
 }
 
-.container-split{
-    width:100%;
-    height:100%;
+.container-split {
+    width: 100%;
+    height: 100%;
     display: -webkit-box;
     -webkit-box-orient: horizontal;
     box-orient: horizontal;
 }
+
 .sidebar {
     padding: 0 15px 0 15px;
     width: 200px;
@@ -88,7 +89,7 @@ body {
 .container-right {
     width: calc(100% - 230px);
     overflow: auto;
-    height:100%;
+    height: 100%;
 }
 
 /*表格*/
@@ -112,9 +113,9 @@ div.routeModal {
         max-height: 600px;
     }
 
-        .route-update textarea {
-            width: 389px;
-        }
+.route-update textarea {
+    width: 389px;
+}
 
 .marginLeft3 {
     margin-left: 3px;
@@ -213,51 +214,51 @@ div.showmsg {
 /*view动画*/
 /* Have to set height explicity on ui-view 
 to prevent collapsing during animation*/
-.well[ui-view]{
- height: 100%;
+.well[ui-view] {
+    height: 100%;
 }
 
 .view-enter, .view-leave {
-  position: absolute;
-  -webkit-transition:all 0.4s ease-in-out;
-	-moz-transition:all 0.4s ease-in-out;
-	-o-transition:all 0.4s ease-in-out;
-	transition:all 0.4s ease-in-out;
+    position: absolute;
+    -webkit-transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
 }
 
 .view-enter {
-  opacity: 0;
-  -webkit-transform:scale3d(0.5, 0.5, 0.5);
-  -moz-transform:scale3d(0.5, 0.5, 0.5);
-  transform:scale3d(0.5, 0.5, 0.5);
+    opacity: 0;
+    -webkit-transform: scale3d(0.5, 0.5, 0.5);
+    -moz-transform: scale3d(0.5, 0.5, 0.5);
+    transform: scale3d(0.5, 0.5, 0.5);
 }
 
 .view-enter-active {
-  opacity: 1;
-  -webkit-transform:scale3d(1, 1, 1);
-  -moz-transform:scale3d(1, 1, 1);
-  transform:scale3d(1, 1, 1);
+    opacity: 1;
+    -webkit-transform: scale3d(1, 1, 1);
+    -moz-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
 }
 
 .view-leave {
-  opacity: 1;
-  /*padding-left: 0px;*/  
-  -webkit-transform:translate3d(0, 0, 0);
-  -moz-transform:translate3d(0, 0, 0);
-  transform:translate3d(0, 0, 0);
+    opacity: 1;
+    /*padding-left: 0px;*/
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
 }
 
 .view-leave-active {
-  opacity: 0;
-  /*padding-left: 100px;*/
-  -webkit-transform:translate3d(100px, 0, 0);
-  -moz-transform:translate3d(100px, 0, 0);
-  transform:translate3d(100px, 0, 0);
+    opacity: 0;
+    /*padding-left: 100px;*/
+    -webkit-transform: translate3d(100px, 0, 0);
+    -moz-transform: translate3d(100px, 0, 0);
+    transform: translate3d(100px, 0, 0);
 }
 
 /*list动画*/
-.animate-enter, 
-.animate-leave { 
+.animate-enter,
+.animate-leave {
     -webkit-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
     -moz-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
     -ms-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
@@ -265,35 +266,62 @@ to prevent collapsing during animation*/
     transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
     position: relative;
     display: block;
-} 
- 
-.animate-leave.animate-leave-active,
-.animate-enter {
-    -webkit-transform: scaleY(0);
-    -moz-transform: scaleY(0);
-    -ms-transform: scaleY(0);
-    -o-transform: scaleY(0);
-    transform: scaleY(0);
-    height: 0px;
-    opacity: 0;
-}
- 
-.animate-enter.animate-enter-active,
-.animate-leave {
-    -webkit-transform: scaleY(1);
-    -moz-transform: scaleY(1);
-    -ms-transform: scaleY(1);
-    -o-transform: scaleY(1);
-    transform: scaleY(1);
-    height: 30px;
-    opacity: 1;
 }
 
+    .animate-leave.animate-leave-active,
+    .animate-enter {
+        -webkit-transform: scaleY(0);
+        -moz-transform: scaleY(0);
+        -ms-transform: scaleY(0);
+        -o-transform: scaleY(0);
+        transform: scaleY(0);
+        height: 0px;
+        opacity: 0;
+    }
+
+        .animate-enter.animate-enter-active,
+        .animate-leave {
+            -webkit-transform: scaleY(1);
+            -moz-transform: scaleY(1);
+            -ms-transform: scaleY(1);
+            -o-transform: scaleY(1);
+            transform: scaleY(1);
+            height: 30px;
+            opacity: 1;
+        }
+
 /*表单*/
-.error-msg{
-    color:red;
+.error-msg {
+    color: red;
 }
 
 thead th {
     cursor: pointer;
 }
+
+/*host*/
+.hostgroup {
+    margin-top: 10px;
+    margin-bottom: 40px;
+}
+
+    .hostgroup caption {
+        text-align: left;
+    }
+
+        .hostgroup caption span.label {
+            padding: 4px 12px;
+            min-width: 61px;
+            text-align: center;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            height: 16px;
+        }
+    .hostgroup tr.info th {
+        background-color: #3a87ad;
+        color: #fff;
+    }
+    .hostgroup table td {
+        vertical-align: middle;
+        background-color: #3a87ad;
+    }
