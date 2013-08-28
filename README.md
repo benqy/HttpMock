@@ -9,7 +9,8 @@
 支持设置自定义header,设置请求的延迟,用js写简单的服务端逻辑,快速拖动文件/文件夹来创建http服务,查看http日记,调试手机的http请求.  
 目前支持windows系统.没水果电脑,没办法生成水果版本.
 ###启动软件  
-暂时懒得打包成单个exe,直接拖动app文件夹到nw.exe上即可启动软件.
+1. 打包好的Windows EXE: [v0.2.2beta](http://pan.baidu.com/share/link?shareid=1752027876&uk=839447171)
+2. 或者下载源代码,直接拖动app文件夹到nw.exe上即可启动软件.
 
 ###创建http服务  
 mock:即站点,每次只能有一个mock处于启动状态(这设定貌似不合理?但是我目前够用)  

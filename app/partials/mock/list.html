@@ -2,7 +2,7 @@
     <div class="sidebar">
         <h4>Mock列表<a title="新建Mock" style="float: right;" href="#/mocks/update/" class="btn btn-mini"><i class="icon-plus"></i></a></h4>
         <ul class="nav nav-list" id="mocklist">
-            <li ng-repeat="mock in mocks" ng-class="{active:mock.isCurrent}">
+            <li ng-repeat="mock in mocks| toArray" ng-class="{active:mock.isCurrent}">
                 <a href="#/mocks/{{mock.id}}">{{mock.name}}<i ng-show="serverStatus.mockId==mock.id" class="icon-ok-circle icon-margin" style="margin-left:5px"></i></a>
             </li>
         </ul>
