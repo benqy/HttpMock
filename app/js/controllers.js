@@ -84,7 +84,7 @@ angular.module('httpmock.controllers', [])
 
     //如果有指定id,则用指定的route替换掉默认值
     $stateParams.id && (route = app.store.route.getRoute(currentMock.id, $stateParams.id));
-    $scope.title = $stateParams.id ? '编辑Route:' + route.name : '新建Route';
+    $scope.title = $stateParams.id ? '编辑Route:' + route.path : '新建Route';
 
     //使用clone的副本与表单绑定,只有保存成功才会实际更新
     $scope.route = angular.copy(route);
