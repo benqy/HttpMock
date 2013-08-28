@@ -7,17 +7,20 @@
             <a class="btn " href="javascript://" ng-click="save(groups,groupNames)">保存</a>
         </div>
         <span class="alert" ng-show="hasUnSaveChange">
-            <strong>注意!</strong> 点击保存之后改动才会生效
+            <strong>注意!</strong> 改动尚未保存!
         </span>
     </div>
-    <div ng-repeat="group in groups" class="hostgroup">
+    <div ng-repeat="group in groups| toArray | orderBy:order" class="hostgroup">
         <form name="hostgroups">
             <table class="table table-condensed" markfortest="routelist">
                 <caption>
-                    <span class="label label-info">{{group.name}}</span>
+                    <span class="label label-info">
+                        {{group.name}}
+                        <input ng-change="groupNameChange(group)" autofocus ng-show="group.inEdit"  type="text" name="group.name"  ng-model="group.name" required>
+                    </span>
                     <div class="btn-group">
                         <a href="javascript://" ng-click="add(group)" title="添加host" class="btn btn-mini"><i class="icon-plus "></i></a>
-                        <a href="javascript://"  title="修改分组名称" class="btn btn-mini disabled"><i class="icon-edit"></i></a>
+                        <a href="javascript://" ng-show="group.name!='未分组'" ng-click="editGroup(group)" title="修改分组名称" class="btn btn-mini"><i class="icon-edit"></i></a>
                         <a href="javascript://" ng-show="group.name!='未分组'" ng-click="removeGroup(groups,group)" title="删除分组" class="btn  btn-mini"><i class="icon-trash"></i></a>
                     </div>
                 </caption>
@@ -44,7 +47,7 @@
                             <input ng-change="unSave()" style="margin: 0;" type="text" name="name" placeholder="域名" ng-model="host.address" required>
                         </td>
                         <td>
-                            <select style="margin: 0;" name="group" ng-model="host.group" ng-options="k as k for (k, v) in groupNames">
+                            <select  ng-change="unSave()" style="margin: 0;" name="group" ng-model="host.group" ng-options="k as k for (k, v) in groupNames">
                             </select>
                         </td>
                         <td>

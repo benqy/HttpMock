@@ -151,6 +151,7 @@ angular.module('httpmock.controllers', [])
   .controller('Host', function ($scope) {
     $scope.hasUnSaveChange = false;
     $scope.newGroupName = '';
+    $scope.order = 'index';
     $scope.groups = app.store.host.get();
     $scope.groupNames = app.store.host.getGroupNames();
     //重新加载host文件
@@ -200,10 +201,41 @@ angular.module('httpmock.controllers', [])
         $scope.groups[newGroupName] = $scope.groups[newGroupName] || { name: newGroupName, hosts: [] };
       }
     };
-
+    //删除分组
     $scope.removeGroup = function (groups,group) {
       $scope.hasUnSaveChange = true;
       app.store.host.removeGroup(groups, group);
       delete $scope.groupNames[group.name];
+    };
+    
+    //修改分组名称
+    $scope.editGroup = function (group) {
+      group.inEdit = true;
+      group.oldName = group.name;
+    };
+
+    $scope.groupNameChange = function(group) {
+      var oldName = group.oldName, newName = group.name,tempGroup;
+      //更新分组名集合信息
+      if (!newName || oldName == newName) return;
+      $scope.hasUnSaveChange = true;
+      $scope.groupNames[newName] = {
+        name: newName,
+        value: newName
+      };
+      //更新此组下的host的组名
+      for (var groupName in $scope.groups) {
+        tempGroup = $scope.groups[groupName];
+        tempGroup.hosts.forEach(function (host) {
+          if (host.group == oldName) {
+            host.group = newName;
+          }
+        });
+      }
+      //更新分组集合信息
+      $scope.groups[newName] = group;
+      delete $scope.groupNames[oldName];
+      delete $scope.groups[oldName];
+      group.oldName = newName;
     };
   });

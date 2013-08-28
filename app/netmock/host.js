@@ -4,8 +4,8 @@
     hostRegRepeat = /^(#*)\s*(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s{1,}([\w\.\-_]{1,})/igm,
     //匹配一行分组注释
     groupReg = /^#{1,}httpmockgroup\[(.*)\]/,
-    groupNames = {"未分组":{name:"未分组",value:"未分组"}};
- 
+    groupNames = { "未分组": { name: "未分组", value: "未分组" } };
+
 /**
  * @name readHost
  * @function
@@ -20,7 +20,7 @@ function readHost() {
 function loadGroupNames() {
   var hostTxt = readHost(), matchs = /#httpmockgroups\[(.*)\]/igm.exec(hostTxt);
   if (matchs && matchs[1]) {
-    matchs[1].split(',').forEach(function(item) {
+    matchs[1].split(',').forEach(function (item) {
       if (item) {
         groupNames[item] = {
           name: item,
@@ -32,7 +32,7 @@ function loadGroupNames() {
   return groupNames;
 }
 
-function writeGroupNameToHostTxt(data,hostTxt) {
+function writeGroupNameToHostTxt(data, hostTxt) {
   var groupNamesArr = [];
   groupNames = data;
   hostTxt = hostTxt || readHost();
@@ -53,22 +53,27 @@ function writeGroupNameToHostTxt(data,hostTxt) {
  * @returns {Object} host集合对象
  */
 function loadHostFile() {
-  var groups = { "未分组": { name: '未分组', hosts: [] } },
+  var index = 1,
+      groups = { "未分组": { name: '未分组', hosts: [], index: index } },
       //每行为一项的host文件数组
       hostFileLines = readHost().split('\n'), currentGroup;
+  index++;
   groupNames = [];
   loadGroupNames();
   for (var key in groupNames) {
-    groups[key] = groups[key] || { name: key, hosts: [] };
+    if (!groups[key]) {
+      groups[key] = { name: key, hosts: [], index: index };
+      index++;
+    }
   }
   hostFileLines.forEach(function (line) {
     var matchs = hostReg.exec(line), host = {}, groupMatch = groupReg.exec(line);
     //读取分组名
     if (groupMatch) {
       currentGroup = groupMatch[1];
-      groupNames[currentGroup] = groupNames[currentGroup] || {        
+      groupNames[currentGroup] = groupNames[currentGroup] || {
         name: currentGroup,
-        value:currentGroup
+        value: currentGroup
       };
     }
     //这一行是正确的host配置
@@ -83,7 +88,10 @@ function loadHostFile() {
       } else {
         host.group = '未分组';
       }
-      groups[host.group] = groups[host.group] || { name: host.group, hosts: [] };
+      if (!groups[host.group]) {
+        groups[host.group] = { name: host.group, hosts: [], index: index };
+        index++;
+      }
       groups[host.group].hosts.push(host);
     }
   });
@@ -99,10 +107,10 @@ function loadHostFile() {
  * @returns {Object} host集合对象
  */
 function reGroupHost(groups) {
-  var toGroup = {},group;
+  var toGroup = {}, group;
   for (var groupName in groups) {
     group = groups[groupName];
-    group.hosts.forEach(function(host) {
+    group.hosts.forEach(function (host) {
       toGroup[host.group] = toGroup[host.group] || { name: host.group, hosts: [] };
       toGroup[host.group].hosts.push(host);
     });
@@ -118,7 +126,7 @@ function reGroupHost(groups) {
  * @description 对分组重新整理,以纠正那些错误的分组
  * @returns {Object} host集合对象
  */
-function writeHostFile(groups,scopeGroupNames) {
+function writeHostFile(groups, scopeGroupNames) {
   // /#httpmockgroup\[abc\]\r\n#*\s*10\.5\.17\.20\s*svn2\.17173\.com/
   // new RegExp('#httpmockgroup\\[abc\\]\\r\\n#*\\s*10\\.5\\.17\\.20\\s*svn2\\.17173\\.com')
   var txt = readHost(), group;
@@ -155,9 +163,9 @@ function writeHostFile(groups,scopeGroupNames) {
  */
 function addHost(ip, addrs) {
   if (!addrs) return false;
-  try{
+  try {
     var txt = readHost(), addrArr = addrs.split(','), newHost = '';
-    addrArr.forEach(function(addr) {
+    addrArr.forEach(function (addr) {
       if (addr) {
         //移除已经有的此域名配置
         txt = txt.replace(new RegExp(ip + ' ' + addr, 'g'), '');
@@ -231,7 +239,7 @@ exports.setProxy = function () {
  * @description 取消ie浏览器的代理设置
  * @returns {undefined}
  */
-exports.disProxy = function() {
+exports.disProxy = function () {
   var exec = require("child_process").exec;
   exec('REGEDIT /S ./netmock/disproxy.reg');
 };

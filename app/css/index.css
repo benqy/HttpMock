@@ -310,13 +310,20 @@ thead th {
     }
 
         .hostgroup caption span.label {
-            padding: 4px 12px;
+            padding: 7px 12px 0 12px;
             min-width: 61px;
             text-align: center;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
-            height: 16px;
+            height: 24px;
         }
+            .hostgroup caption span.label input {
+                border: none;
+                height: 16px;
+                padding: 2px 12px;
+                margin: 0;
+                border-radius: 0;
+            }
     .hostgroup tr.info th {
         background-color: #3a87ad;
         color: #fff;
