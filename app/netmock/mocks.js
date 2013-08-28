@@ -36,7 +36,9 @@ var updateMock = function (data) {
     data.id = util.generalId();
   }
   data.name = data.name.toLowerCase();
-  data.secondaryName = data.secondaryName.toLowerCase();
+  if (data.secondaryName) {
+    data.secondaryName = data.secondaryName.toLowerCase();
+  }
   mocks[data.id] = data;
   util.writeFileSync(DIR_BASE + 'mocks.json', JSON.stringify(mocks));
   return { success: true, msg: 'success' };

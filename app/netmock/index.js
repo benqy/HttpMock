@@ -154,7 +154,7 @@ var noErrorDecodeUri = function(url) {
  */
 var isMatchMockName = function(host) {
   var result = false;
-  if (runningMock && (host == runningMock.name.toLowerCase() || ~runningMock.secondaryName.toLowerCase().indexOf(host))) {
+  if (runningMock && (host == runningMock.name.toLowerCase() || (runningMock.secondaryName && ~runningMock.secondaryName.toLowerCase().indexOf(host)))) {
     result = true;
   }
   return result;
