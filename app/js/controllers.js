@@ -29,6 +29,19 @@ angular.module('httpmock.controllers', [])
     $scope.openRoute = function (route) {
       gui.Shell.openExternal('http://' + currentMock.name + (currentMock.port == 80 ? '' : ':' + currentMock.port) + route.path);
     };
+
+    $scope.isDirRoute = function(route) {
+      return /^[a-zA-Z]:(([a-zA-Z]*)||([a-zA-Z]*\\))*/.test(route.responseData);
+    };
+
+    $scope.openDir = function(route) {
+      if (require('fs').existsSync(route.responseData)) {
+        require('nw.gui').Shell.showItemInFolder(route.responseData);
+      } else {
+        alert('文件不存在');
+      }
+    };
+
     $scope.delRoute = function (route) {
       if (confirm('确认删除路径  ' + route.path)) {
         if (app.store.route.delRoute(route.mockId, route.id).success) {
