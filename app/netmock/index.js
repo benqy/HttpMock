@@ -489,6 +489,7 @@ module.exports = {
       host.setProxy();
     }
     isRunning = SERVER_STATUS.operating;
+    module.exports.removeCurrentHost();
     module.exports.fire('serverStatusChange', { status: SERVER_STATUS.operating });
     module.exports.fire('msg', { msg: '如果mock类型为代理,并且代理未生效,请重启IE浏览器或手动设置' });
     runningMock = mock;
