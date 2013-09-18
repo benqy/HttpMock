@@ -242,11 +242,20 @@
      * @function
      *
      * @description 保存系统设置.
-     * @param {ss} ss 系统设置对象.
+     * @param {Object} systemSetting  系统设置对象.
      * @returns {Object} 保存结果.
      */
-    update: function (ss) {
-      return nm.saveSystemSetting(ss);
+    update: function (systemSetting) {
+      if (!systemSetting.storeDir) {
+        systemSetting.storeDir = require('nw.gui').App.dataPath[0];
+      }
+      if (!systemSetting.proxyDir) {
+        systemSetting.proxyDir = require('nw.gui').App.dataPath[0] + '\\proxyDir';
+        if (!require('fs').existsSync(systemSetting.proxyDir)) {
+          require('fs').mkdirSync(systemSetting.proxyDir);
+        }
+      }
+      return nm.saveSystemSetting(systemSetting);
     }
   };
 

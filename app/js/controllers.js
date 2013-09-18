@@ -142,9 +142,6 @@ angular.module('httpmock.controllers', [])
     };
     $scope.update = function (systemSetting) {
       //如果没有指定保存的路径,则使用用户文件夹作为默认值
-      if (!systemSetting.storeDir) {
-        systemSetting.storeDir = require('nw.gui').App.dataPath[0];
-      }
       var result = app.store.systemSetting.update(systemSetting);
       if (result.success) {
         alert('保存成功');

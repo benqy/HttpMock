@@ -13,6 +13,12 @@
             </div>
         </div>
         <div class="control-group">
+            <label class="control-label">自动代理文件目录</label>
+            <div class="controls">
+                <input type="text" class="large" ng-model="systemSetting.proxyDir" name="proxyDir" style="width: 390px;">
+            </div>
+        </div>
+        <div class="control-group">
             <label class="control-label">全局Response Header</label>
             <div class="controls">
                 <p class="globarHeader firstGlobalHeader" ng-repeat="gh in systemSetting.globalHeaders">

@@ -549,7 +549,10 @@ module.exports = {
   saveSystemSetting: function (data) {
     var globalHeaders = [];
     if (!fs.existsSync(data.storeDir)) {
-      return { success: false, msg: '路径不存在' };
+      return { success: false, msg: '存储路径不存在' };
+    }
+    if (!fs.existsSync(data.proxyDir)) {
+      return { success: false, msg: '代理文件路径不存在' };
     }
     if (data.globalHeaders) {
       data.globalHeaders.forEach(function (item) {
