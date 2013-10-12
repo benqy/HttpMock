@@ -438,7 +438,15 @@
       $('#nextHelp').hide();
     }
     el.show();
+    //5秒后消失
+    clearTimeout(app.showMsg.singleInstanceTimer);
+    app.showMsg.singleInstanceTimer = setTimeout(function () {
+      $('#showmsg').hide();
+    }, 5000);
   };
+
+  app.showMsg.singleInstanceTimer = null;
+
   $('#showmsg .close').on('click', function () {
     $('#showmsg').hide();
   });
