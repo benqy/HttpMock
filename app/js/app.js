@@ -19,6 +19,7 @@
         this.name = option.name;
         this.port = option.port || 80;
         this.desc = option.desc;
+        this.protocol = option.protocol || 'http';
         this.mockType = option.mockType || 1;
       },
       Route: function (mockId) {

@@ -1,4 +1,4 @@
-﻿var http = require('http'), fs = require('fs'), httpProxy = require('http-proxy'),
+﻿var http = require('http'),https = require('https'), fs = require('fs'), httpProxy = require('http-proxy'),
     host = require('./host'), mocks = require('./mocks'), util = require('../helpers/util'),
     iconv = require('iconv-lite'), zlib = require('zlib'),
     //当前正在运行中的mock
@@ -268,8 +268,7 @@ proxyServer.listen(17173);
 
 
 var runServer = function () {
-  //处理请求
-  currentServer = http.createServer(function (req, res) {
+  var serverHandler = function(req, res) {
     var urlOpt = require('url').parse(req.url.toLowerCase(), true), route, header = {}, resData, customFn;
     urlOpt.path = noErrorDecodeUri(urlOpt.path);
     urlOpt.pathname = noErrorDecodeUri(urlOpt.pathname);
@@ -278,7 +277,7 @@ var runServer = function () {
     //全局设置
     var ss = module.exports.getSystemSetting();
     if (ss && ss.globalHeaders) {
-      ss.globalHeaders.forEach(function (ct) {
+      ss.globalHeaders.forEach(function(ct) {
         header[ct.name.toLowerCase()] = ct.value;
       });
     }
@@ -287,7 +286,7 @@ var runServer = function () {
       //route设置
       header['content-type'] = route.contentType;
       if (route.customHeaders) {
-        route.customHeaders.forEach(function (ct) {
+        route.customHeaders.forEach(function(ct) {
           header[ct.name.toLowerCase()] = ct.value;
         });
       }
@@ -299,8 +298,7 @@ var runServer = function () {
           customFn = new Function('query', route.responseData);
           resData = customFn(urlOpt.query);
           resData = JSON.stringify(resData);
-        }
-        catch (e) {
+        } catch(e) {
           resData = JSON.stringify(e.message);
           module.exports.fire('error', { msg: '自定义函数异常:' + resData });
         }
@@ -313,64 +311,50 @@ var runServer = function () {
             header['content-type'] = 'text/html';
             res.writeHead(route.statusCode, header);
             resData = renderDir(urlOpt, resolvePath(route, urlOpt.pathname));
-          }
-          else {
+          } else {
             resData = fs.readFileSync(route.responseData);
           }
-        }
-        else {
+        } else {
           res.writeHead(404, header);
           resData = '文件不存在';
         }
-      }
-      else {
+      } else {
         if (urlOpt.query.callback) {
           resData = urlOpt.query.callback + '(' + route.responseData + ');';
-        }
-        else {
+        } else {
           resData = route.responseData;
         }
       }
     }
-    //静态文件夹的子目录(文件)路由
+      //静态文件夹的子目录(文件)路由
     else if ((route = checkStaticDir(urlOpt.pathname).route)) {
       //根据后缀名设置content-type
       if (!filename) {
         header['content-type'] = 'text/html';
-      }
-      else if (~filename.indexOf('.js')) {
+      } else if (~filename.indexOf('.js')) {
         header['content-type'] = 'application/x-javascript';
-      }
-      else if (~filename.indexOf('.html') || ~filename.indexOf('.shtml') || ~filename.indexOf('.htm')) {
+      } else if (~filename.indexOf('.html') || ~filename.indexOf('.shtml') || ~filename.indexOf('.htm')) {
         header['content-type'] = 'text/html';
-      }
-      else if (~filename.indexOf('.css')) {
+      } else if (~filename.indexOf('.css')) {
         header['content-type'] = 'text/css';
-      }
-      else if (~filename.indexOf('.xml')) {
+      } else if (~filename.indexOf('.xml')) {
         header['content-type'] = 'application/xml';
-      }
-      else if (~filename.indexOf('.json')) {
+      } else if (~filename.indexOf('.json')) {
         header['content-type'] = 'application/json';
-      }
-      else if (~filename.indexOf('.jpg')) {
+      } else if (~filename.indexOf('.jpg')) {
         header['content-type'] = 'image/jpeg';
-      }
-      else if (~filename.indexOf('.png')) {
+      } else if (~filename.indexOf('.png')) {
         header['content-type'] = 'image/png';
-      }
-      else if (~filename.indexOf('.gif')) {
+      } else if (~filename.indexOf('.gif')) {
         header['content-type'] = 'image/gif';
-      }
-      else if (~filename.indexOf('.bmp')) {
+      } else if (~filename.indexOf('.bmp')) {
         header['content-type'] = 'image/bmp';
-      }
-      else {
+      } else {
         header['content-type'] = 'application/x-msdownload';
       }
       //根目录自定义header
       if (route.customHeaders) {
-        route.customHeaders.forEach(function (ct) {
+        route.customHeaders.forEach(function(ct) {
           header[ct.name.toLowerCase()] = ct.value;
         });
       }
@@ -382,21 +366,27 @@ var runServer = function () {
           header['content-type'] = 'text/html';
           res.writeHead(route.statusCode, header);
           resData = renderDir(urlOpt, dir);
-        }
-        else {
+        } else {
           resData = fs.readFileSync(dir);
         }
-      }
-      else {
+      } else {
         res.writeHead(404, header);
         resData = '文件不存在';
       }
-    }
-    else {
+    } else {
       resData = '404';
     }
     res.end(resData || '');
-  });
+  };
+  //处理请求
+  if (runningMock.protocol === 'https') {
+    currentServer = https.createServer({
+      key: fs.readFileSync('./netmock/2-key.pem'),
+      cert: fs.readFileSync('./netmock/2-cert.pem')
+    }, serverHandler);
+  } else {
+    currentServer = http.createServer(serverHandler);
+  }
   currentServer.on('error', function (e) {
     if (e.code == 'EACCES') {
       module.exports.fire('error', { msg: '端口被占用' });

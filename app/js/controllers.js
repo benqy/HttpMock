@@ -27,7 +27,8 @@ angular.module('httpmock.controllers', [])
     };
 
     $scope.openRoute = function (route) {
-      gui.Shell.openExternal('http://' + currentMock.name + (currentMock.port == 80 ? '' : ':' + currentMock.port) + route.path);
+      var port = (currentMock.port == 80 || currentMock.port == 443) ? '' : ':' + currentMock.port;
+      gui.Shell.openItem((currentMock.protocol || 'http') + '://' + currentMock.name + port + route.path);
     };
 
     $scope.isDirRoute = function(route) {
@@ -73,6 +74,14 @@ angular.module('httpmock.controllers', [])
     $scope.title = $stateParams.id ? '编辑Mock:' + mock.name : '新建Mock';
     $scope.mock = angular.copy(mock);
     $scope.errorMsg = '';
+    $scope.changeDefaultPort = function (formMock) {
+      console.log(formMock.protocol)
+      if (formMock.protocol === 'https') {
+        formMock.port = 443;
+      } else {
+        formMock.port = 80;
+      }
+    };
     $scope.update = function (formMock) {
       var result = app.store.mock.updateMock(formMock);
       if (result.success) {
