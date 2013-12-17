@@ -229,7 +229,8 @@ exports.removeHost = removeHost;
  */
 exports.setProxy = function () {
   var exec = require("child_process").exec;
-  exec('REGEDIT /S ./netmock/proxy.reg');
+  //exec('REGEDIT /S ./netmock/proxy.reg');
+  exec(__dirname + '\\runproxy.exe');
 };
 
 /**
@@ -241,7 +242,8 @@ exports.setProxy = function () {
  */
 exports.disProxy = function () {
   var exec = require("child_process").exec;
-  exec('REGEDIT /S ./netmock/disproxy.reg');
+  //exec('REGEDIT /S ./netmock/disproxy.reg');
+  exec(__dirname + '\\stopproxy.exe');
 };
 
 

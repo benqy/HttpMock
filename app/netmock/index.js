@@ -481,7 +481,6 @@ module.exports = {
     isRunning = SERVER_STATUS.operating;
     module.exports.removeCurrentHost();
     module.exports.fire('serverStatusChange', { status: SERVER_STATUS.operating });
-    module.exports.fire('msg', { msg: '如果mock类型为代理,并且代理未生效,请重启IE浏览器或手动设置' });
     runningMock = mock;
     runningRoutes = mocks.getRoutes(mockId);
     this.runServer();
@@ -508,7 +507,6 @@ module.exports = {
       isRunning = SERVER_STATUS.closed;
       module.exports.fire('serverStatusChange', { status: SERVER_STATUS.closed });
     });
-    module.exports.fire('msg', { msg: '浏览器代理已关闭,如果未生效,请手动设置' });
   },
   getRunningInstance: function () {
     return {
