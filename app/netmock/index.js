@@ -297,7 +297,8 @@ var runServer = function () {
         try {
           customFn = new Function('query', route.responseData);
           resData = customFn(urlOpt.query);
-          resData = JSON.stringify(resData);
+          resData =resData;
+          console.log(resData);
         } catch(e) {
           resData = JSON.stringify(e.message);
           module.exports.fire('error', { msg: '自定义函数异常:' + resData });
