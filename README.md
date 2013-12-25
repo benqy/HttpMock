@@ -14,8 +14,9 @@
 1. 下载源代码  
 2. 下载[node-webkit压缩包](https://s3.amazonaws.com/node-webkit/v0.7.5/node-webkit-v0.7.5-win-ia32.zip)  
 3. 解压node-webkit到项目根目录  
-4. 将app文件夹拖动到nw.exe即可  
-5. 打包等更详细的开发文档,请看[node-webkit的WIKI](https://github.com/rogerwang/node-webkit)
+4. 进入app文件夹,运行npm install  
+5. 返回根目录双击nw.exe即可  
+6. 打包等更详细的开发文档,请看[node-webkit的WIKI](https://github.com/rogerwang/node-webkit)
 
 
 ###创建http服务  
