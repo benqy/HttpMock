@@ -12,7 +12,7 @@
 一, **打包好的Windows EXE**: [v0.2.2release](http://pan.baidu.com/s/107of0)  
 二, **开发**  
 1. 下载源代码  
-2. 下载[node-webkit压缩包](https://s3.amazonaws.com/node-webkit/v0.7.5/node-webkit-v0.7.5-win-ia32.zip)  
+2. 下载[node-webkit压缩包](https://github.com/rogerwang/node-webkit)  
 3. 解压node-webkit到项目根目录  
 4. 进入app文件夹,运行npm install  
 5. 返回根目录双击nw.exe即可  
