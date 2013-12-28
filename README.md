@@ -18,6 +18,9 @@
 5. 返回根目录双击nw.exe即可  
 6. 打包等更详细的开发文档,请看[node-webkit的WIKI](https://github.com/rogerwang/node-webkit)
 
+###自动打包发布
+1. 打包之前,请确保上一步(开发)操作完成.应用可以运行
+2. 目前只实现了windows下的打包,运行build目录下的build-win.bat,就会自动打包到build\bin下.
 
 ###创建http服务  
 mock:即站点,每次只能有一个mock处于启动状态(这设定貌似不合理?但是我目前够用)  
