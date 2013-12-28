@@ -4,7 +4,7 @@
   "description": "a webserver for frontend developer.accept http proxy and log.",
   "main": "index.html",
   "directories": {
-    "test": "test"
+    "test": "no"
   },
   "dependencies": {
     "iconv-lite": "~0.2.11",
@@ -20,5 +20,18 @@
     "proxy"
   ],
   "author": "benqy",
-  "license": "WTFPL"
+  "license": "WTFPL",
+  "name": "HTTPMOCK",
+  "main": "index.html",
+  "window": {
+    "title": "HttpMock",
+    "icon": "img/logo.png",
+    "toolbar": false,
+    "frame": false,
+    "width": 1200,
+    "height": 700,
+    "position": "center",
+    "min_width": 1200,
+    "min_height": 700
+  }
 }
