@@ -4,9 +4,12 @@ module.exports = function(grunt) {
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
         nodewebkit: {
             options: {
+                version: '0.8.2',
                 app_name: 'httpmock',
+                app_version: '<%= pkg.version %>',
                 build_dir: './build', // Where the build version of my node-webkit app is saved
                 mac: true, // We want to build it for mac
                 win: true, // We want to build it for win
