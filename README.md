@@ -20,7 +20,14 @@
 
 ###自动打包发布
 1. 打包之前,请确保上一步(开发)操作完成.应用可以运行
-2. 目前只实现了windows下的打包,运行build目录下的build-win.bat,就会自动打包到build\bin下.
+2. 用[grunt-node-webkit-builder](https://github.com/mllrsohn/grunt-node-webkit-builder)打包多平台应用程序，进入根目录
+
+	```
+	$ npm install
+	$ grunt build
+	```
+部署的应用程序会生成到/build/releases下，详细配置见 Gruntfile.js
+	
 
 ###创建http服务  
 mock:即站点,每次只能有一个mock处于启动状态(这设定貌似不合理?但是我目前够用)  
