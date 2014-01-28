@@ -2,7 +2,9 @@
   "name": "HTTPMOCK",
   "version": "0.2.2-release",
   "description": "a webserver for frontend developer.accept http proxy and log.",
-  "main": "index.html",
+  "main": "app/index.html",
+  "author": "benqy",
+  "license": "WTFPL",
   "directories": {
     "test": "no"
   },
@@ -19,10 +21,6 @@
     "httpmock",
     "proxy"
   ],
-  "author": "benqy",
-  "license": "WTFPL",
-  "name": "HTTPMOCK",
-  "main": "index.html",
   "window": {
     "title": "HttpMock",
     "icon": "img/logo.png",
