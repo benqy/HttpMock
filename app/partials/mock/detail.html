@@ -1,4 +1,4 @@
-﻿<div>
+﻿<div id="mockDetails">
     <h3>Mock信息</h3>
     <table class="table table-hover">
         <thead>
@@ -35,6 +35,7 @@
         <a title="编辑Mock" class="btn btn-info" markfortest="mockedit" href="#/mocks/update/{{currentMock.id}}"><i class="icon-edit  icon-white"></i></a>
         <a title="删除Mock"  ng-click="delMock(currentMock)" class="btn btn-info"><i class="icon-trash  icon-white"></i></a>
         <a title="添加新的路由" markfortest="routeadd" class="btn btn-info" href="#/mocks/updateroute/{{currentMock.id}}/"><i class="icon-plus  icon-white"></i></a>
+        <!--<input class="span2" ng-model="query" placeholder="搜索" type="text">-->
     </div>
     <h3>路由列表</h3>
     <table class="table table-hover" markfortest="routelist">
@@ -70,7 +71,7 @@
         <tbody>
             <tr ng-repeat="route in routes">
                 <td>{{$index+1}}</td>
-                <td>{{route.path}}</td>
+                <td>{{route.path | limitTo:20}}</td>
                 <td>{{route.statusCode}}</td>
                 <td>{{route.delay}}</td>
                 <td>{{route.noProxy}}</td>
@@ -85,7 +86,7 @@
                     </div>
                 </td>
                 <td>{{route.contentType}}</td>
-                <td>{{route.responseData}}</td>
+                <td>{{route.responseData | limitTo:20}}</td>
                 <td>
                     <div class="btn-group">
                         <a href="javascript://" title="在浏览器打开" ng-click="openRoute(route)" class="btn btn-info btn-mini"><i class="icon icon-share icon-white"></i></a>

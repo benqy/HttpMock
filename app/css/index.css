@@ -92,6 +92,12 @@ body {
     height: 100%;
 }
 
+.btn-group input{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border: 1px solid rgba(82, 168, 236, 0.8);
+    margin:0;
+}
 /*表格*/
 .table th, .table td {
     padding: 8px 5px;
