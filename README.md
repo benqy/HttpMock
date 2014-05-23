@@ -15,18 +15,13 @@
 2. 下载[node-webkit压缩包](https://github.com/rogerwang/node-webkit)  
 3. 解压node-webkit到项目根目录  
 4. 进入app文件夹,运行npm install  
-5. 返回根目录双击nw.exe即可  
+5. 返回根目录,拖动app文件夹到nw.exe上即可  
 6. 打包等更详细的开发文档,请看[node-webkit的WIKI](https://github.com/rogerwang/node-webkit)
 
 ###自动打包发布
 1. 打包之前,请确保上一步(开发)操作完成.应用可以运行
-2. 用[grunt-node-webkit-builder](https://github.com/mllrsohn/grunt-node-webkit-builder)打包多平台应用程序，进入根目录
-
-	```
-	$ npm install
-	$ grunt build
-	```
-部署的应用程序会生成到/build/releases下，详细配置见 Gruntfile.js
+2. 进入build文件夹,运行build-win.bat即可.目前不支持其他平台.  
+部署的应用程序会生成到/build/bin下,可以用windows平台的其他工具把文件再次打包成单个exe.
 	
 
 ###创建http服务  
