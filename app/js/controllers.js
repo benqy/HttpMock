@@ -160,11 +160,23 @@ angular.module('httpmock.controllers', [])
     };
   })
   .controller('Log', function ($scope) {
+    var nm = require('./netmock');
     $scope.logs = app.store.log.logs;
     $scope.query = '';
     $scope.order = 'date';
     $scope.clear = function () {
       app.store.log.clear();
+    };
+    $scope.globalProxyOn = nm.host.globaProxyOn;
+    $scope.toggleGlobalProxy = function () {
+      if ($scope.globalProxyOn) {
+        app.store.mock.stop();
+        nm.globalProxyOff();
+      }
+      else {
+        nm.globalProxyOn();
+      }
+      $scope.globalProxyOn = !$scope.globalProxyOn;
     };
   })
   .controller('Host', function ($scope) {

@@ -173,10 +173,10 @@
     }
     serverStatus.status = data.status;
     
-    if (!currentMockScope.$$phase && !currentMockScope.$root.$$phase) {
+    if (currentMockScope && !currentMockScope.$$phase && !currentMockScope.$root.$$phase) {
       currentMockScope.$digest();
     }
-    if (!mocksScope.$$phase && !mocksScope.$root.$$phase) {
+    if (mocksScope && !mocksScope.$$phase && !mocksScope.$root.$$phase) {
       mocksScope.$digest();
     }
   });

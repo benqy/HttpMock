@@ -211,7 +211,7 @@ function removeHost(ip, addrs) {
     return false;
   }
 }
-
+exports.globaProxyOn = false;
 exports.readHost = readHost;
 exports.loadHostFile = loadHostFile;
 exports.loadGroupNames = loadGroupNames;
@@ -231,6 +231,7 @@ exports.setProxy = function () {
   var exec = require("child_process").exec;
   //exec('REGEDIT /S ./netmock/proxy.reg');
   exec(__dirname + '\\runproxy.exe');
+  exports.globaProxyOn = true;
 };
 
 /**
@@ -244,6 +245,7 @@ exports.disProxy = function () {
   var exec = require("child_process").exec;
   //exec('REGEDIT /S ./netmock/disproxy.reg');
   exec(__dirname + '\\stopproxy.exe');
+  exports.globaProxyOn = false;
 };
 
 

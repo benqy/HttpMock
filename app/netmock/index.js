@@ -197,6 +197,7 @@ var proxyServer = httpProxy.createServer(function (req, res, proxy) {
   }
 });
 
+
 /**
  * @name isGbk
  * @function
@@ -404,7 +405,6 @@ var runServer = function () {
   isRunning = SERVER_STATUS.running;
   module.exports.fire('serverStatusChange', { status: SERVER_STATUS.running, mock: runningMock });
 };
-
 module.exports = {
   resDataType: {
     text: 'text',
@@ -486,6 +486,12 @@ module.exports = {
     runningMock = mock;
     runningRoutes = mocks.getRoutes(mockId);
     this.runServer();
+  },
+  globalProxyOn: function () {
+    host.setProxy();
+  },
+  globalProxyOff: function () {
+    host.disProxy();
   },
   //刷新当前运行的route的数据
   updateCurrentRoute: function () {
