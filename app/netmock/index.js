@@ -268,7 +268,7 @@ proxyServer.listen(17173);
 
 
 var runServer = function () {
-  var serverHandler = function(req, res) {
+  var serverHandler = function (req, res) {
     var urlOpt = require('url').parse(req.url.toLowerCase(), true), route, header = {}, resData, customFn;
     urlOpt.path = noErrorDecodeUri(urlOpt.path);
     urlOpt.pathname = noErrorDecodeUri(urlOpt.pathname);
@@ -375,6 +375,7 @@ var runServer = function () {
         resData = '文件不存在';
       }
     } else {
+      res.writeHead(404, header);
       resData = '404';
     }
     res.end(resData || '');
